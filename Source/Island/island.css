@@ -1,0 +1,79 @@
+
+
+/* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!GENERAL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
+
+*{
+    margin:0;
+    padding:0;
+}
+
+li{
+
+    list-style: none;
+}
+
+
+
+/* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! HEADER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
+
+.header{
+    position: fixed;
+    width: 100%;
+}
+
+.header_motor {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: antiquewhite;
+    padding:2rem;
+  }
+
+.header_motor li:first-child {
+margin-right: 1rem;
+}
+  
+.header_motor li:last-child {
+margin-left: auto;
+}
+
+
+body{
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!main!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
+
+
+main{
+    
+    display: flex;
+    height: 100vh;
+    margin-top: 4rem;
+}
+
+
+.cadreInfos {
+    padding: 2rem;
+    flex: 1; 
+    /* border: solid;
+    border-radius: 10px; */
+    background-color: red; 
+  }
+  
+  .main {
+    flex: 3; 
+    background-color: #e0e0e0; 
+    padding: 20px; 
+  }
+
+.carteIle{
+    border:solid;
+    width: 35rem;
+    height: 30rem;
+    border-radius: 10px;
+    background-size: cover;
+    background-image: url("../../Images/Reunion.jpg");
+}
