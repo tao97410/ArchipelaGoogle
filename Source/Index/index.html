@@ -8,7 +8,7 @@
     <!-- Include Tailwind CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
     <link rel="stylesheet" href="index.css">
-
+    <script src="./index.js"></script>
     <title>ArchipelaGoogle</title>
 </head>
 
@@ -29,12 +29,14 @@
         <section class="search-section">
             <h2>Chercher l'île de vos rêves</h2>
             <form class="border-2 rounded-xl p-2 bg-black bg-opacity-60" id="search-form">
-                <input id="search-input" type="text" id="search-input" placeholder="Entrer le nom d'une île..."
-                    list="islands">
-                <img id="search-icon" src="../../assets/search-icon-white.svg" alt="Rechercher">
+                <input id="search-input" type="text" placeholder="Entrer le nom d'une île..."
+                    list="islands" onsubmit="() => {rechercher(); alert('hello1')}">
+                <img onclick="rechercher()" id="search-icon" src="../../assets/search-icon-white.svg" alt="Rechercher">
 
                 <!-- Datalist with island (name) suggestions -->
-                <datalist id="islands"></datalist>
+                <datalist id="islands">
+                    <option value="Réunion">Réunion</option>
+                </datalist>
             </form>
         </section>
     </main>

@@ -41,6 +41,12 @@
 }
 
 li{
-
     list-style: none;
+}
+
+
+/* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! RESULTS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
+
+main {
+    padding-top: 10vh; /* Avoid title overlapping the results */ 
 }

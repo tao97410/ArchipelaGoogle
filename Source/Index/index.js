@@ -22,8 +22,6 @@ function addOptionsToDatalist(options) {
     });
 }
 
-addOptionsToDatalist(["aaa", "aaab", "aaac", "bbbc"]);
-
 
 function rechercherSuggestions() {
     // Requête SPARQL à exécuter
@@ -42,8 +40,7 @@ function rechercherSuggestions() {
                             FILTER(?islandArea > 30000)
 
                         }
-                        ORDER BY ASC(?Name)
-                        LIMIT 2600`;
+                        ORDER BY ASC(?Name)`;
 
     // URL de l'endpoint SPARQL de Wikidata
     const endpointUrl = 'https://query.wikidata.org/sparql';
@@ -71,7 +68,22 @@ function rechercherSuggestions() {
     queryWikidata();
 }
 
+/* -------- Search bar script -----------*/
 
+document.addEventListener("DOMContentLoaded", function() {
 
-// Call functions
-rechercherSuggestions();
+    var textInput = document.getElementById("search-input");
+
+    // Add an event listener for the keypress event
+    textInput.addEventListener("keypress", function (event) {
+        // Check if the pressed key is Enter (key code 13)
+        if (event.code.toLowerCase() === "enter") {
+            event.preventDefault();
+
+            // Call your function here
+            rechercher();
+        }
+    });
+});
+
+window.onload = rechercherSuggestions();
