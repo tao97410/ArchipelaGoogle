@@ -1,0 +1,46 @@
+/* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! HEADER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
+
+.header{
+    position: fixed;
+    width: 100%;
+}
+
+.header_motor {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    background-color: rgb(44, 43, 43) ;
+  }
+
+.header_motor li:first-child {
+    margin-right: 1rem;
+    margin-left: 2rem;
+}
+
+.header_motor li:first-child img {
+    height:5rem;
+    margin: 0.5rem;
+
+}
+
+#Archipel{
+    font-weight: bold;
+    font-size:3em;
+    text-shadow: 2px 2px 4px black;
+    color: white;
+}
+  
+.header_motor li:last-child {
+    margin-left: auto;
+    margin-right: auto;
+    color:white;
+    text-shadow: 2px 2px 4px black;
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+li{
+
+    list-style: none;
+}
