@@ -7,6 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="island.css" />     <script src="./island.js"> </script>
+    <!-- Include Tailwind CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <link rel="stylesheet" href="index.css">
     <title>Island</title>
 </head>
 
@@ -18,9 +21,9 @@
 
     <header class="header">
         <ul class="header_motor">
-            <li> <img  class="logo" src="" alt="logoMoteurRecherche"></li>
-            <li class="maclass"><span>ArchipelaGoogle </span></li>
-            <li class="maclass" > <p> Tous les meilleurs voyages débutent par une recherche</p></li>
+            <li><a href="../../src/index.html"> <img  class="logo" src="../../assets/logo.png" alt="logoMoteurRecherche"></a></li>
+            <li class="" id="Archipel"><span>Archipel </span></li>
+            <li class="maclass" > <p> Tous les voyages débutent par une recherche</p></li>
         </ul>
     
     
@@ -28,18 +31,31 @@
 
     <main>
         <div class="cadreInfos">
-
             <ul>
+
                 <li>
-                    <h1> Ile de La Réunion </h1>
+                    <h1 id="nomIle"> </h1>
                 </li>
+
                 <li>
-                    <div class="carteIle">
+                    <img  class="carteIle" src="../../Images/Reunion.jpg" alt="">
+                </li>
+
+                <li>
+                    <div class="div_cadreInfos "id="administration">
+                        <h3 >Administration</h3>
                     </div>
                 </li>
+
+                <li>
+                    <div class="div_administration">
+                        <p class="libellé"> Statut</p>
+                        <p class="contenu" id="Statut"></p>
+                    </div>
+                
+                </li>
+                
             </ul>
-            
-    
         </div>
     
         <div class="main">

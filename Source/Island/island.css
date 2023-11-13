@@ -13,6 +13,11 @@ li{
 }
 
 
+body{
+    background-color: rgb(238, 236, 236) ;
+}
+
+
 
 /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! HEADER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
 
@@ -25,16 +30,35 @@ li{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: antiquewhite;
-    padding:2rem;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    background-color: rgb(44, 43, 43) ;
   }
 
 .header_motor li:first-child {
-margin-right: 1rem;
+    margin-right: 1rem;
+    margin-left: 2rem;
+}
+
+.header_motor li:first-child img {
+    height:5rem;
+    margin: 0.5rem;
+
+}
+
+#Archipel{
+    font-weight: bold;
+    font-size:3em;
+    text-shadow: 2px 2px 4px black;
+    color: white;
 }
   
 .header_motor li:last-child {
-margin-left: auto;
+    margin-left: auto;
+    margin-right: auto;
+    color:white;
+    text-shadow: 2px 2px 4px black;
+    font-weight: bold;
+    font-size: 1.5em;
 }
 
 
@@ -48,32 +72,87 @@ body{
 
 
 main{
-    
     display: flex;
     height: 100vh;
-    margin-top: 4rem;
+    margin-right: 10rem;
+    margin-left:10rem;
+    margin-top: 6rem;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    background-color: white;
+
 }
 
 
 .cadreInfos {
-    padding: 2rem;
-    flex: 1; 
-    /* border: solid;
-    border-radius: 10px; */
-    background-color: red; 
+    /* padding: 0rem 2rem; */
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* background-color: rgb(231, 230, 230);  */
   }
-  
-  .main {
+
+.cadreInfos ul {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.cadreInfos ul li {
+    width: 100%;
+    margin:0.5rem 0 0.5rem 0;
+    padding:0 0.2rem 0 0.2rem;
+    
+    /* background-color: red; */
+}
+
+.div_cadreInfos{
+    background-color: rgb(207, 206, 206);    
+    padding: 0.2em;
+    font-weight:bold;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    width: 100%;
+
+}
+
+.cadreInfos h1{
+    font-weight: bold;
+    font-size:3em;
+    text-shadow: 1px 1px 2px black;
+    color: black;
+    align-self: center;
+}
+
+.carteIle{
+    height: 20rem;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+
+.div_administration{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    /* background-color: red; */
+}
+
+.libellé{
+    text-align: left;
+    font-weight: bold;
+}
+
+.contenu{
+    width: 80%;
+    overflow-wrap: break-word;  
+    word-wrap: break-word; 
+    word-break: break-word;}
+
+
+.main {
     flex: 3; 
     background-color: #e0e0e0; 
     padding: 20px; 
   }
 
-.carteIle{
-    border:solid;
-    width: 35rem;
-    height: 30rem;
-    border-radius: 10px;
-    background-size: cover;
-    background-image: url("../../Images/Reunion.jpg");
-}
