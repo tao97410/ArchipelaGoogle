@@ -1,0 +1,37 @@
+{
+    "Name": "Example Location",
+    "Desc": "Description of the location.",
+    "Area": "Example Area",
+    "Population": 100000,
+    "Coordonates": {
+      "latitude": 40.7128,
+      "longitude": -74.0060
+    },
+    "Archipelago": {
+      "id": 2,
+      "Name": "Example Archipelago"
+    },
+    "Seas": [
+        {
+            "id": 31,
+            "Name": "Example Sea 1"
+        },
+        {
+            "id": 32,
+            "Name": "Example Sea 2"
+        }
+
+    ],
+    "Countries": [
+        {
+            "id": 41,
+            "Name": "Example Country 1"
+        },
+        {
+            "id" : 42,
+            "Name" : "Example Country 2"
+        }
+
+    ]
+  }
+  
