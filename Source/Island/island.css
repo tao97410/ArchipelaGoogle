@@ -15,6 +15,9 @@ li{
 
 body{
     background-color: rgb(238, 236, 236) ;
+    background-image: url('../../assets/background_island.png');
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 
 
@@ -147,7 +150,8 @@ main{
     width: 80%;
     overflow-wrap: break-word;  
     word-wrap: break-word; 
-    word-break: break-word;}
+    word-break: break-word;
+}
 
 .contenu_cliquable{
     width: 80%;
@@ -156,6 +160,8 @@ main{
     word-break: break-word;
     color:blue ;
     text-decoration: underline;
+    cursor: pointer;
+    
 }
 
 
@@ -166,4 +172,3 @@ main{
     background-color: #e0e0e0; 
     padding: 20px; 
   }
-
