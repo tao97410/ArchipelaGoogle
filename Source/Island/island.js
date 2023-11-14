@@ -6,26 +6,26 @@ function getParameter(name) {
 function rechercher() {
     // Requête SPARQL à exécuter
 const sparqlQuery = `#defaultView:Table
-SELECT DISTINCT ?Desc ?Area ?Population ?Coordinates ?Archipelago ?Seas ?Countries ?Image
+SELECT DISTINCT ?Name ?Desc ?Area ?Population ?Coordinates ?Archipelago ?Seas ?Countries ?Image
   WHERE {
     # Instances of island (or of subclasses of island)
     ?Page (wdt:P31/wdt:P279*) wd:Q23442.
     ?Page rdfs:label ?Name.
     FILTER(lang(?Name) = 'fr')
-    FILTER(?Name = \"` + getParameter("ile") + `\")
+    FILTER(STR(?Name) = \"` + getParameter("ile") + `\")
+    OPTIONAL{?Page schema:description ?Desc.
+    FILTER(lang(?Desc) = 'fr')}
     # Get the area of the island
     # Use the psn: prefix to normalize the values to a common unit of area
-    ?Page p:P2046/psn:P2046/wikibase:quantityAmount ?Area.
-    ?Page rdfs:description ?Desc.
-    FILTER(lang(?Desc) = 'fr')
-    ?Page p:P1082/psn:P1082 ?Population.
-    ?Page p:P625/psn:P625 ?Coordinates.
-    ?Page p:P361/psn:P361 ?Archipelago.
-    ?Archipelago (wdt:P31/wdt:P279*) wd:Q33837.
-    ?Page p:P206/psn:P206 ?Seas.
-    ?Page p:P17/psn:P17 ?Countries.
+    OPTIONAL {?Page wdt:P2046 ?Area.}
+    OPTIONAL {?Page wdt:P1082 ?Population.}
+    OPTIONAL {?Page wdt:P625 ?Coordinates.}
+    OPTIONAL {?Page wdt:P361 ?Archipelago.
+    ?Archipelago (wdt:P31/wdt:P279*) wd:Q33837.}
+    OPTIONAL {?Page wdt:P206 ?Seas.}
+    OPTIONAL {?Page wdt:P17 ?Countries.}
   }
-  ORDER BY DESC(?Area)
+  ORDER BY ?Countries ?Seas
   LIMIT 100`;
 
   // URL de l'endpoint SPARQL de Wikidata
@@ -37,12 +37,29 @@ SELECT DISTINCT ?Desc ?Area ?Population ?Coordinates ?Archipelago ?Seas ?Countri
   // Fonction pour effectuer la requête SPARQL
   async function queryWikidata() {
     try {
-        console.log("before queyr");
       const response = await fetch(sparqlUrl);
-      console.log("before queyr");
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
+        let dataFinal = {};          
+        dataFinal.Name = data.results.bindings[0].Name.value;
+        dataFinal.Desc = data.results.bindings[0].Desc.value;
+        dataFinal.Area = data.results.bindings[0].Area.value;
+        dataFinal.Population = data.results.bindings[0].Population.value;
+        dataFinal.Coordinates = data.results.bindings[0].Coordinates.value;
+        dataFinal.Archipelago = data.results.bindings[0].Archipelago.value;
+        dataFinal.Seas = [];
+        dataFinal.Countries = [];
+        data.results.bindings.forEach(r => {
+          if(!dataFinal.Seas.includes(r.Seas.value)){
+            dataFinal.Seas.push(r.Seas.value);
+          }
+          
+          if(!dataFinal.Countries.includes(r.Countries.value)){
+            dataFinal.Countries.push(r.Countries.value);
+          }          
+        });
+        let jsonDataFinal = JSON.stringify(dataFinal);
+        console.log(jsonDataFinal);
       } else {
         console.error('Erreur lors de la requête SPARQL :', response.statusText);
       }
@@ -50,7 +67,6 @@ SELECT DISTINCT ?Desc ?Area ?Population ?Coordinates ?Archipelago ?Seas ?Countri
       console.error('Erreur lors de la requête SPARQL :', error);
     }
   }
-
   queryWikidata();
 }
 
