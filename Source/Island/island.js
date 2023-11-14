@@ -6,7 +6,7 @@ function getParameter(name) {
 function rechercher() {
     // Requête SPARQL à exécuter
 const sparqlQuery = `#defaultView:Table
-SELECT DISTINCT ?Name ?Desc ?Area ?Population ?Coordinates ?Archipelago ?Seas ?Countries ?Image
+SELECT DISTINCT ?Name ?Desc ?Area ?Population ?Coordinates ?Archipelago ?SeasId ?SeasNames ?CountriesId ?CountriesNames ?Image 
   WHERE {
     # Instances of island (or of subclasses of island)
     ?Page (wdt:P31/wdt:P279*) wd:Q23442.
@@ -22,8 +22,13 @@ SELECT DISTINCT ?Name ?Desc ?Area ?Population ?Coordinates ?Archipelago ?Seas ?C
     OPTIONAL {?Page wdt:P625 ?Coordinates.}
     OPTIONAL {?Page wdt:P361 ?Archipelago.
     ?Archipelago (wdt:P31/wdt:P279*) wd:Q33837.}
-    OPTIONAL {?Page wdt:P206 ?Seas.}
-    OPTIONAL {?Page wdt:P17 ?Countries.}
+    OPTIONAL {?Page wdt:P206 ?SeasId.
+             ?SeasId rdfs:label ?SeasNames.
+             FILTER(lang(?SeasNames)='fr')}
+    OPTIONAL {?Page wdt:P17 ?CountriesId.
+             ?CountriesId rdfs:label ?CountriesNames.
+             FILTER(lang(?CountriesNames)='fr')}
+    OPTIONAL{?Page wdt:P18 ?Image}
   }
   ORDER BY ?Countries ?Seas
   LIMIT 100`;
@@ -42,20 +47,25 @@ SELECT DISTINCT ?Name ?Desc ?Area ?Population ?Coordinates ?Archipelago ?Seas ?C
         const data = await response.json();
         let dataFinal = {};          
         dataFinal.Name = data.results.bindings[0].Name.value;
-        dataFinal.Desc = data.results.bindings[0].Desc.value;
-        dataFinal.Area = data.results.bindings[0].Area.value;
-        dataFinal.Population = data.results.bindings[0].Population.value;
-        dataFinal.Coordinates = data.results.bindings[0].Coordinates.value;
-        dataFinal.Archipelago = data.results.bindings[0].Archipelago.value;
+        dataFinal.Desc = data.results.bindings[0].Desc?.value;
+        dataFinal.Area = data.results.bindings[0]?.Area?.value;
+        dataFinal.Population = data.results.bindings[0]?.Population?.value;
+        dataFinal.Coordinates = data.results.bindings[0]?.Coordinates?.value;
+        dataFinal.Archipelago = data.results.bindings[0]?.Archipelago?.value;
+        dataFinal.Image = data.results.bindings[0]?.Image?.value;
         dataFinal.Seas = [];
         dataFinal.Countries = [];
         data.results.bindings.forEach(r => {
-          if(!dataFinal.Seas.includes(r.Seas.value)){
-            dataFinal.Seas.push(r.Seas.value);
+          if(!dataFinal.Seas.some(row => row.includes(r?.SeasId?.value))){
+            let sea = {};
+            sea.id = r?.SeasId?.value;
+            sea.Name = r?.SeasNames?.value;
+            let jsonSea = JSON.stringify(sea);
+            dataFinal.Seas.push(jsonSea);
           }
           
-          if(!dataFinal.Countries.includes(r.Countries.value)){
-            dataFinal.Countries.push(r.Countries.value);
+          if(!dataFinal.Countries.some(row => row.includes(r?.CountriesId?.value))){
+            dataFinal.Countries.push([r?.CountriesId?.value, r?.CountriesNames?.value]);
           }          
         });
         let jsonDataFinal = JSON.stringify(dataFinal);
