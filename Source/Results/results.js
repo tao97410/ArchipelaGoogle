@@ -4,6 +4,8 @@ function getParameter(name) {
 }
 
 function rechercher() {
+  document.getElementById("loading").style.display = "block";
+
   console.log("appel à la fonction rechercher");
   // Requête SPARQL à exécuter
   const sparqlQuery = `#defaultView:Table
@@ -44,6 +46,7 @@ WHERE {
       const response = await fetch(sparqlUrl);
       if (response.ok) {
         const data = await response.json();
+        document.getElementById("loading").style.display = "none";
         afficherResultats(data);
       } else {
         console.error('Erreur lors de la requête SPARQL :', response.statusText);
@@ -57,27 +60,28 @@ WHERE {
 }
 
 function afficherResultats(data) {
-  // Tableau pour mémoriser l'ordre des variables ; sans doute pas nécessaire
-  // pour vos applications, c'est juste pour la démo sous forme de tableau
-  var index = [];
-  var contenuTableau = "<tr>";
+  // var contenuTableau = "<tr>";
 
-  data.head.vars.forEach((v, i) => {
-    contenuTableau += "<th>" + v + "</th>";
-    index.push(v);
-  });
+
+
+  // contenuTableau += "<th>Nom</th>";
+
+  // data.results.bindings.forEach(r => {
+  //   contenuTableau += "<tr>";
+  //   contenuTableau += "<td><a href =\"../../Source/Island/island.html?ile=" + r.Name.value + "\">" + r.Name.value + " </a></td>";
+  //   contenuTableau += "</tr>";
+  // });
+
+
+  // contenuTableau += "</tr>";
+
+  var contenuTableau = "";
 
   data.results.bindings.forEach(r => {
-    contenuTableau += "<tr>";
-    contenuTableau += "<td><a href='" + r.Page.value + "' target='_blank'>" + r.Page.value + "</a></td>";
-    contenuTableau += "<td><a href =\"../../Source/Island/island.html?ile=" + r.Name.value + "\">" + r.Name.value + " </a></td>";
-    contenuTableau += "</tr>";
+    contenuTableau += "<a class='resultLink' href =\"../../Source/Island/island.html?ile=" + r.Name.value + "\"><div class='resultContainer'> "+ r.Name.value + " </div></a>";
   });
 
-
-  contenuTableau += "</tr>";
-
-  document.getElementById("Resultats").innerHTML = contenuTableau;
+  document.getElementById("resultats").innerHTML = contenuTableau;
 
 }
 

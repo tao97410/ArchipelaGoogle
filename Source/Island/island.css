@@ -138,7 +138,7 @@ main{
     /* background-color: red; */
 }
 
-.libellé{
+.libelle{
     text-align: left;
     font-weight: bold;
 }
@@ -148,6 +148,17 @@ main{
     overflow-wrap: break-word;  
     word-wrap: break-word; 
     word-break: break-word;}
+
+.contenu_cliquable{
+    width: 80%;
+    overflow-wrap: break-word;  
+    word-wrap: break-word; 
+    word-break: break-word;
+    color:blue ;
+    text-decoration: underline;
+}
+
+
 
 
 .main {

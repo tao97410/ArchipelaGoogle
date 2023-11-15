@@ -102,8 +102,8 @@ li{
     list-style: none;
 }
 
-/* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! HEADER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
+/* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! MAIN !!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
 
 main {
-    padding-top: 5vh; /* Avoid title overlapping the results */ 
+    padding-top: 5vh;
 }
