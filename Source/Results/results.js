@@ -60,22 +60,17 @@ WHERE {
 }
 
 function afficherResultats(data) {
-  // var contenuTableau = "<tr>";
-
-
-
-  // contenuTableau += "<th>Nom</th>";
-
-  // data.results.bindings.forEach(r => {
-  //   contenuTableau += "<tr>";
-  //   contenuTableau += "<td><a href =\"../../Source/Island/island.html?ile=" + r.Name.value + "\">" + r.Name.value + " </a></td>";
-  //   contenuTableau += "</tr>";
-  // });
-
-
-  // contenuTableau += "</tr>";
 
   var contenuTableau = "";
+  var titleContainer = document.getElementById("title-container");
+
+  if (data.results.bindings.length == 0)
+  {
+    titleContainer.innerHTML = "<h1>Résultats de votre recherche : aucune île trouvée</h1>";
+  } else {
+  titleContainer.innerHTML = "<h1>Résultats de votre recherche : " + data.results.bindings.length + (data.results.bindings.length == 1 ? " île trouvée</h1>" : " îles trouvées</h1>");
+  }
+
 
   data.results.bindings.forEach(r => {
     contenuTableau += "<a class='resultLink' href =\"../../Source/Island/island.html?ile=" + r.Name.value + "\"><div class='resultContainer'> "+ r.Name.value + " </div></a>";
