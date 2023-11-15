@@ -1,22 +1,134 @@
+function getParameter(name) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(name);
+}
 
+function rechercher() {
+    // Requête SPARQL à exécuter
+const sparqlQuery = `#defaultView:Table
+SELECT DISTINCT ?Page ?Name ?Desc ?Area ?Population ?Coordinates ?ArchipelagoId ?ArchipelagoName ?SeasId ?SeasNames ?CountriesId ?CountriesNames ?Image ?Demonym ?Languages ?Flags ?Government
+  WHERE {
+    # Instances of island (or of subclasses of island)
+    ?Page (wdt:P31/wdt:P279*) wd:Q23442.
+    ?Page rdfs:label ?Name.
+    ?Page wdt:P131 ?region.
+    FILTER(lang(?Name) = 'fr')
+    FILTER(STR(?Name) = \"`+ getParameter("ile") +`\")
+    OPTIONAL{?Page schema:description ?Desc.
+    FILTER(lang(?Desc) = 'fr')}
+    # Get the area of the island
+    # Use the psn: prefix to normalize the values to a common unit of area
+    OPTIONAL {?Page wdt:P2046 ?Area.}
+    OPTIONAL {?Page wdt:P1082 ?Population.}
+    OPTIONAL {?Page wdt:P625 ?Coordinates.}
+    OPTIONAL {?Page wdt:P361 ?ArchipelagoId.
+    ?ArchipelagoId (wdt:P31/wdt:P279*) wd:Q33837.
+    ?ArchipelagoId rdfs:label ?ArchipelagoName.
+    FILTER(lang(?ArchipelagoName) = 'fr')}
+    OPTIONAL {?Page wdt:P206 ?SeasId.
+             ?SeasId rdfs:label ?SeasNames.
+             FILTER(lang(?SeasNames)='fr')}
+    OPTIONAL {?Page wdt:P17 ?CountriesId.
+             ?CountriesId rdfs:label ?CountriesNames.
+             FILTER(lang(?CountriesNames)='fr')}
+    OPTIONAL{?Page wdt:P18 ?Image}
+    OPTIONAL{?region wdt:P1549 ?Demonym}
+    OPTIONAL{?region wdt:P37 ?LanguagesId.
+             ?LanguagesId rdfs:label ?Languages.
+             FILTER(lang(?Languages)='fr')}
+    OPTIONAL{?region wdt:P41 ?Flags}
+    OPTIONAL{?region wdt:P6 ?Government}
+  }
+  ORDER BY ?Government ?Countries ?Seas
+  LIMIT 100`;
 
-var xhttp= new XMLHttpRequest();
-xhttp.onreadystatechange=SetPage;
+  // URL de l'endpoint SPARQL de Wikidata
+  const endpointUrl = 'https://query.wikidata.org/sparql';
 
-xhttp.open('GET','../../exemple2.json');
+  // Construire l'URL de la requête GET en ajoutant la requête SPARQL en tant que paramètre
+  const sparqlUrl = endpointUrl + "?query="+encodeURIComponent(sparqlQuery)+ "&format=json";
 
-xhttp.send();
+  // Fonction pour effectuer la requête SPARQL
+  async function queryWikidata() {
+    try {
+      const response = await fetch(sparqlUrl);
+      if (response.ok) {
+        const data = await response.json();
+        let dataFinal = {};          
+        dataFinal.Name = data.results.bindings[0].Name.value;
+        dataFinal.Desc = data.results.bindings[0].Desc?.value;
+        dataFinal.Area = data.results.bindings[0]?.Area?.value;
+        dataFinal.Population = data.results.bindings[0]?.Population?.value;
+        dataFinal.Image = data.results.bindings[0]?.Image?.value;
+        dataFinal.Demonym = data.results.bindings[0]?.Demonym?.value;
+        dataFinal.Government = data.results.bindings[data.results.bindings.length-1]?.Government?.value;    
 
- window.onload = function () {
-    SetPage();
- };
+        let archi = {};
+        archi.id = data.results.bindings[0]?.ArchipelagoId?.value;
+        archi.Name = data.results.bindings[0]?.ArchipelagoName?.value;
+        let jsonArchi = JSON.stringify(archi);
 
+        dataFinal.Archipelago = jsonArchi;
 
-function SetPage(island) {
+        // Utilisation d'une expression régulière pour extraire les valeurs de latitude et de longitude
+        let match = data.results.bindings[0]?.Coordinates?.value.match(/Point\(([-\d.]+) ([-\d.]+)\)/);
+
+        if (match) {
+          // match[1] contient la latitude, match[2] contient la longitude
+          let latitude = parseFloat(match[1]);
+          let longitude = parseFloat(match[2]);
+
+          // Création de l'objet JSON avec les attributs latitude et longitude
+          let jsonObject = { latitude, longitude };
+          let jsonCoordinates = JSON.stringify(jsonObject);
+
+          dataFinal.Coordinates = jsonCoordinates;
+        }else{
+          dataFinal.Coordinates = undefined;
+        }
+
+        dataFinal.Languages = [];
+        dataFinal.Flags = [];
+        dataFinal.Seas = [];
+        dataFinal.Countries = [];
+        data.results.bindings.forEach(r => {
+          if(!dataFinal.Languages.includes(r?.Languages?.value)){
+            dataFinal.Languages.push(r?.Languages?.value);
+          }
+          if(!dataFinal.Flags.includes(r?.Flags?.value)){
+            dataFinal.Flags.push(r?.Flags?.value);
+          }
+          let sea = {};
+          sea.id = r?.SeasId?.value;
+          sea.Name = r?.SeasNames?.value;
+          let jsonSea = JSON.stringify(sea);
+          if(!dataFinal.Seas.includes(jsonSea)){
+            dataFinal.Seas.push(jsonSea);
+          }
+          let country = {};
+          country.id = r?.CountriesId?.value;
+          country.Name = r?.CountriesNames?.value;
+          let jsonCountry = JSON.stringify(country);
+          if(!dataFinal.Countries.includes(jsonCountry)){
+            dataFinal.Countries.push(jsonCountry);
+          }
+                  
+        });
+        let jsonDataFinal = JSON.stringify(dataFinal);
+        setPage(jsonDataFinal);
+      } else {
+        console.error('Erreur lors de la requête SPARQL :', response.statusText);
+      }
+    } catch (error) {
+      console.error('Erreur lors de la requête SPARQL :', error);
+    }
+  }
+  queryWikidata();
+}
+
+function setPage(information) {
     if(this.readyState==4 && this.status==200){
         var tbody=document.getElementsByTagName("tbody");
-        var information=JSON.parse(this.response);
-        console.log(information);
         var nomIle_html=document.getElementById('Content_NomIle');
         var statut_html=document.getElementById('Content_Statut');
         var area_html = document.getElementById('Content_Area');
@@ -147,9 +259,7 @@ function SetPage(island) {
                 var id = event.currentTarget.id;
                 GoToPage(id,"Country");
             });
-        }
-        
-        
+        }       
 
         
     }
@@ -163,3 +273,7 @@ function GoToPage(id,type){
     var url = `../${type}/${type.toLowerCase()}.html?id=${id}`;
     document.location.href = url;
 }
+
+window.onload = function () {
+    rechercher();
+  };
