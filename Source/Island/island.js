@@ -26,6 +26,13 @@ function SetPage(island) {
         var archipel_html = document.getElementById('Content_Archipel');
         var mer_html = document.getElementById('Content_Seas');
         var pays_html = document.getElementById('Content_Countries');
+        var gentile_html=  document.getElementById('Content_Gentile');
+        var langues_html=  document.getElementById('Content_Langues');
+        var chefAdministratif_html=  document.getElementById('Content_ChefAdministratif');
+        var images_html= document.getElementById('images');
+        
+
+
 
         console.log(information.Name);
         
@@ -79,6 +86,39 @@ function SetPage(island) {
         });
 
 
+        gentile_html.innerHTML=information.Demonym;
+        chefAdministratif_html.innerHTML=information.Government;
+
+        var languagesLength = information.Languages.length;
+
+        information.languages.forEach((languageElement, index) => {
+            var newElem = document.createElement('p');
+            newElem.className = "contenu";
+            newElem.textContent = languageElement.Name;
+
+            // Ajoutez une virgule si ce n'est pas le dernier élément
+            if (index < languagesLength - 1) {
+                newElem.textContent += ",";
+            }
+
+            langues_html.appendChild(newElem);
+        });
+
+        var flag=document.createElement('img');
+        flag.className="carteIle";
+        flag.setAttribute('src',information.Flags);
+
+        images_html.appendChild(flag);
+
+        var image=document.createElement('img');
+        flag.className="carteIle";
+        flag.setAttribute('src',information.Image);
+
+        images_html.appendChild(flag);
+
+
+
+
         // EVENT LISTENERS
 
 
@@ -121,6 +161,5 @@ function SetPage(island) {
 function GoToPage(id,type){
 
     var url = `../${type}/${type.toLowerCase()}.html?id=${id}`;
-    console.log(url);
     document.location.href = url;
 }

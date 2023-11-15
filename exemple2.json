@@ -2,7 +2,7 @@
     "Name": "Example Location",
     "Desc": "Description of the location.",
     "Area": "Example Area",
-    "Population": 100000,
+    "Population":" Example Area",
     "Coordonates": {
       "latitude": 40.7128,
       "longitude": -74.0060

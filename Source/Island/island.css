@@ -79,9 +79,11 @@ main{
     height: 100vh;
     margin-right: 10rem;
     margin-left:10rem;
-    margin-top: 6rem;
+    margin-top: 7rem;
+    margin-bottom: 4rem;
     box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
     background-color: white;
+    height: fit-content;
 
 }
 
@@ -134,16 +136,22 @@ main{
 }
 
 
-.div_administration{
+.div_section{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    /* background-color: red; */
+    align-items: center;
 }
 
 .libelle{
     text-align: left;
     font-weight: bold;
+}
+
+
+.div_images{
+    display: grid;
+    height: 20rem;
 }
 
 .contenu{
@@ -158,14 +166,11 @@ main{
     overflow-wrap: break-word;  
     word-wrap: break-word; 
     word-break: break-word;
-    color:blue ;
+    color:rgb(0, 89, 255) ;
     text-decoration: underline;
     cursor: pointer;
     
 }
-
-
-
 
 .main {
     flex: 3; 
