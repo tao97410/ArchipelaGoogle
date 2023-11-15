@@ -6,14 +6,13 @@ function getParameter(name) {
 function rechercher() {
     // Requête SPARQL à exécuter
 const sparqlQuery = `#defaultView:Table
-SELECT DISTINCT ?Page ?Name ?Desc ?Area ?Population ?Coordinates ?ArchipelagoId ?ArchipelagoName ?SeasId ?SeasNames ?CountriesId ?CountriesNames ?Image ?Demonym ?Languages ?Flags ?Government
+SELECT DISTINCT ?Page ?Name ?Desc ?Area ?Population ?Coordinates ?Archipelago ?Seas ?Countries ?Image ?Demonym ?Languages ?Flags ?Government
   WHERE {
     # Instances of island (or of subclasses of island)
     ?Page (wdt:P31/wdt:P279*) wd:Q23442.
-    ?Page rdfs:label ?Name.
-    ?Page wdt:P131 ?region.
+    ?Page rdfs:label ?Name.    
     FILTER(lang(?Name) = 'fr')
-    FILTER(STR(?Name) = \"`+ getParameter("ile") +`\")
+    FILTER(STR(?Name) = \"` + getParameter("ile") + `\")
     OPTIONAL{?Page schema:description ?Desc.
     FILTER(lang(?Desc) = 'fr')}
     # Get the area of the island
@@ -22,22 +21,26 @@ SELECT DISTINCT ?Page ?Name ?Desc ?Area ?Population ?Coordinates ?ArchipelagoId 
     OPTIONAL {?Page wdt:P1082 ?Population.}
     OPTIONAL {?Page wdt:P625 ?Coordinates.}
     OPTIONAL {?Page wdt:P361 ?ArchipelagoId.
-    ?ArchipelagoId (wdt:P31/wdt:P279*) wd:Q33837.
-    ?ArchipelagoId rdfs:label ?ArchipelagoName.
-    FILTER(lang(?ArchipelagoName) = 'fr')}
-    OPTIONAL {?Page wdt:P206 ?SeasId.
-             ?SeasId rdfs:label ?SeasNames.
-             FILTER(lang(?SeasNames)='fr')}
+              ?ArchipelagoId (wdt:P31/wdt:P279*) wd:Q33837.
+              ?ArchipelagoId rdfs:label ?Archipelago.
+              FILTER(lang(?Archipelago) = 'fr')}
+    OPTIONAL {?Page wdt:P206 ?SeaId.
+              ?SeaId rdfs:label ?Seas.
+              FILTER(lang(?Seas) = 'fr')}
     OPTIONAL {?Page wdt:P17 ?CountriesId.
-             ?CountriesId rdfs:label ?CountriesNames.
-             FILTER(lang(?CountriesNames)='fr')}
+      ?CountriesId rdfs:label ?Countries.
+      FILTER(lang(?Countries) = 'fr')}
     OPTIONAL{?Page wdt:P18 ?Image}
-    OPTIONAL{?region wdt:P1549 ?Demonym}
+    OPTIONAL{?Page wdt:P131 ?region.
+    OPTIONAL{?region wdt:P1549 ?Demonym.
+             FILTER(lang(?Demonym) = 'fr')}
     OPTIONAL{?region wdt:P37 ?LanguagesId.
              ?LanguagesId rdfs:label ?Languages.
              FILTER(lang(?Languages)='fr')}
     OPTIONAL{?region wdt:P41 ?Flags}
-    OPTIONAL{?region wdt:P6 ?Government}
+    OPTIONAL{?region wdt:P6 ?GovernmentId.
+             ?GovernmentId rdfs:label ?Government
+             FILTER(lang(?Government)='fr')}}
   }
   ORDER BY ?Government ?Countries ?Seas
   LIMIT 100`;
@@ -61,14 +64,8 @@ SELECT DISTINCT ?Page ?Name ?Desc ?Area ?Population ?Coordinates ?ArchipelagoId 
         dataFinal.Population = data.results.bindings[0]?.Population?.value;
         dataFinal.Image = data.results.bindings[0]?.Image?.value;
         dataFinal.Demonym = data.results.bindings[0]?.Demonym?.value;
-        dataFinal.Government = data.results.bindings[data.results.bindings.length-1]?.Government?.value;    
-
-        let archi = {};
-        archi.id = data.results.bindings[0]?.ArchipelagoId?.value;
-        archi.Name = data.results.bindings[0]?.ArchipelagoName?.value;
-        let jsonArchi = JSON.stringify(archi);
-
-        dataFinal.Archipelago = jsonArchi;
+        dataFinal.Government = data.results.bindings[data.results.bindings.length-1]?.Government?.value;   
+        dataFinal.Archipelago = data.results.bindings[0]?.Archipelago?.value;
 
         // Utilisation d'une expression régulière pour extraire les valeurs de latitude et de longitude
         let match = data.results.bindings[0]?.Coordinates?.value.match(/Point\(([-\d.]+) ([-\d.]+)\)/);
@@ -82,7 +79,7 @@ SELECT DISTINCT ?Page ?Name ?Desc ?Area ?Population ?Coordinates ?ArchipelagoId 
           let jsonObject = { latitude, longitude };
           let jsonCoordinates = JSON.stringify(jsonObject);
 
-          dataFinal.Coordinates = jsonCoordinates;
+          dataFinal.Coordinates = JSON.parse(jsonCoordinates);
         }else{
           dataFinal.Coordinates = undefined;
         }
@@ -98,24 +95,16 @@ SELECT DISTINCT ?Page ?Name ?Desc ?Area ?Population ?Coordinates ?ArchipelagoId 
           if(!dataFinal.Flags.includes(r?.Flags?.value)){
             dataFinal.Flags.push(r?.Flags?.value);
           }
-          let sea = {};
-          sea.id = r?.SeasId?.value;
-          sea.Name = r?.SeasNames?.value;
-          let jsonSea = JSON.stringify(sea);
-          if(!dataFinal.Seas.includes(jsonSea)){
-            dataFinal.Seas.push(jsonSea);
+          if(!dataFinal.Seas.includes(r?.Seas?.value)){
+            dataFinal.Seas.push(r?.Seas?.value);
           }
-          let country = {};
-          country.id = r?.CountriesId?.value;
-          country.Name = r?.CountriesNames?.value;
-          let jsonCountry = JSON.stringify(country);
-          if(!dataFinal.Countries.includes(jsonCountry)){
-            dataFinal.Countries.push(jsonCountry);
+          if(!dataFinal.Countries.includes(r?.Countries?.value)){
+            dataFinal.Countries.push(r?.Countries?.value);
           }
                   
         });
         let jsonDataFinal = JSON.stringify(dataFinal);
-        console.log(jsonDataFinal);
+        console.log(JSON.parse(jsonDataFinal));
       } else {
         console.error('Erreur lors de la requête SPARQL :', response.statusText);
       }
