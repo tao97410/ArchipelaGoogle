@@ -94,6 +94,7 @@ main{
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding-bottom: 2rem;
     /* background-color: rgb(231, 230, 230);  */
   }
 
@@ -109,8 +110,16 @@ main{
     margin:0.5rem 0 0.5rem 0;
     padding:0 0.2rem 0 0.2rem;
     
-    /* background-color: red; */
+    
 }
+/* 
+.cadreInfos ul li .div_images{
+    width: 100%;
+    margin:0.5rem 0 0.5rem 0;
+    padding:0 0.2rem 0 0.2rem;
+    justify-content: center;
+    
+} */
 
 .div_cadreInfos{
     background-color: rgb(207, 206, 206);    
@@ -130,9 +139,10 @@ main{
 }
 
 .carteIle{
-    height: 20rem;
+    height: 10rem;
     margin-right: auto;
     margin-left: auto;
+    border: solid;
 }
 
 
@@ -150,8 +160,13 @@ main{
 
 
 .div_images{
-    display: grid;
-    height: 20rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: fit-content;
+    width: 30rem ;
+    background-color: aqua;
+
 }
 
 .contenu{

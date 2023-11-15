@@ -68,8 +68,8 @@ SELECT DISTINCT ?Page ?Name ?Desc ?Area ?Population ?Coordinates ?ArchipelagoId 
         archi.Name = data.results.bindings[0]?.ArchipelagoName?.value;
         let jsonArchi = JSON.stringify(archi);
 
-        dataFinal.Archipelago = jsonArchi;
-
+        dataFinal.Archipelago = JSON.parse(jsonArchi);
+        
         // Utilisation d'une expression régulière pour extraire les valeurs de latitude et de longitude
         let match = data.results.bindings[0]?.Coordinates?.value.match(/Point\(([-\d.]+) ([-\d.]+)\)/);
 
@@ -82,7 +82,7 @@ SELECT DISTINCT ?Page ?Name ?Desc ?Area ?Population ?Coordinates ?ArchipelagoId 
           let jsonObject = { latitude, longitude };
           let jsonCoordinates = JSON.stringify(jsonObject);
 
-          dataFinal.Coordinates = jsonCoordinates;
+          dataFinal.Coordinates = JSON.parse(jsonCoordinates);
         }else{
           dataFinal.Coordinates = undefined;
         }
@@ -103,19 +103,20 @@ SELECT DISTINCT ?Page ?Name ?Desc ?Area ?Population ?Coordinates ?ArchipelagoId 
           sea.Name = r?.SeasNames?.value;
           let jsonSea = JSON.stringify(sea);
           if(!dataFinal.Seas.includes(jsonSea)){
-            dataFinal.Seas.push(jsonSea);
+            dataFinal.Seas.push(JSON.parse(jsonSea));
           }
           let country = {};
           country.id = r?.CountriesId?.value;
           country.Name = r?.CountriesNames?.value;
           let jsonCountry = JSON.stringify(country);
           if(!dataFinal.Countries.includes(jsonCountry)){
-            dataFinal.Countries.push(jsonCountry);
+            dataFinal.Countries.push(JSON.parse(jsonCountry));
           }
                   
         });
         let jsonDataFinal = JSON.stringify(dataFinal);
-        setPage(jsonDataFinal);
+        console.log(JSON.parse(jsonDataFinal));
+        setPage(JSON.parse(jsonDataFinal));
       } else {
         console.error('Erreur lors de la requête SPARQL :', response.statusText);
       }
@@ -127,7 +128,6 @@ SELECT DISTINCT ?Page ?Name ?Desc ?Area ?Population ?Coordinates ?ArchipelagoId 
 }
 
 function setPage(information) {
-    if(this.readyState==4 && this.status==200){
         var tbody=document.getElementsByTagName("tbody");
         var nomIle_html=document.getElementById('Content_NomIle');
         var statut_html=document.getElementById('Content_Statut');
@@ -149,84 +149,97 @@ function setPage(information) {
         console.log(information.Name);
         
         nomIle_html.innerHTML=information.Name;
-        statut_html.innerHTML=information.Desc;
-        area_html.innerHTML = information.Area;
-        population_html.innerHTML = information.Population;
-        coordonates_html.innerHTML=information.Coordonates.latitude + " " + information.Coordonates.longitude; 
+
+        if (information.Desc)
+            statut_html.innerHTML=information.Desc;
+        if (information.Area)
+            area_html.innerHTML = information.Area+"km²";
+        if (information.Population)
+            population_html.innerHTML = information.Population;
+        if (information.Coordinates)
+            coordonates_html.innerHTML="Lat "+information.Coordinates.latitude + "° ; Long " + information.Coordinates.longitude+"°"; 
 
 
-        archipel_html.setAttribute('id',information.Archipelago.id);
-        archipel_html.innerHTML = information.Archipelago.Name;
-
-       
+        
+        if (information.Archipelago)
+        {
+            archipel_html.innerHTML = information.Archipelago;
+            archipel_html.setAttribute('Name',information.Archipelago);
+        }
 
         // Extract names from each sea element and push them into the seaNames array
-        var seasLength = information.Seas.length;
+        if(information.Seas)
+        {
+            var seasLength = information.Seas.length;
 
-        information.Seas.forEach((seaElement, index) => {
-            var newElem = document.createElement('a');
-            newElem.className = "contenu_cliquable";
-            newElem.setAttribute('id',seaElement.id);
-            newElem.textContent = seaElement.Name;
-        
-            // Ajoutez une virgule si ce n'est pas le dernier élément
-            if (index < seasLength - 1) {
-                newElem.textContent += ",";
-            }
-        
-            mer_html.appendChild(newElem);
-        });
+            information.Seas.forEach((seaElement, index) => {
+                var newElem = document.createElement('a');
+                newElem.className = "contenu_cliquable";
+                newElem.setAttribute('Name',seaElement);
+                newElem.textContent = seaElement;
+            
+                // Ajoutez une virgule si ce n'est pas le dernier élément
+                if (index < seasLength - 1) {
+                    newElem.textContent += ",";
+                }
+            
+                mer_html.appendChild(newElem);
+            });
+        }
 
         // Join the seaNames array with commas to create a comma-separated list
         
 
+        if(information.Countries)
+        {
+            var countriesLength = information.Countries.length;
 
-        var countriesLength = information.Countries.length;
+            information.Countries.forEach((countryElement, index) => {
+                var newElem = document.createElement('a');
+                newElem.className = "contenu_cliquable";
+                newElem.setAttribute('Name',countryElement);
+                newElem.textContent = countryElement;
 
-        information.Countries.forEach((countryElement, index) => {
-            var newElem = document.createElement('a');
-            newElem.className = "contenu_cliquable";
-            newElem.setAttribute('id',countryElement.id);
-            newElem.textContent = countryElement.Name;
+                // Ajoutez une virgule si ce n'est pas le dernier élément
+                if (index < countriesLength - 1) {
+                    newElem.textContent += ",";
+                }
 
-            // Ajoutez une virgule si ce n'est pas le dernier élément
-            if (index < countriesLength - 1) {
-                newElem.textContent += ",";
-            }
+                pays_html.appendChild(newElem);
+            }); 
+        }
 
-            pays_html.appendChild(newElem);
-        });
-
-
+        if(information.Demonym)
         gentile_html.innerHTML=information.Demonym;
+        if(information.Government)
         chefAdministratif_html.innerHTML=information.Government;
 
-        var languagesLength = information.Languages.length;
+        if(information.Languages)
+        {
 
-        information.languages.forEach((languageElement, index) => {
-            var newElem = document.createElement('p');
-            newElem.className = "contenu";
-            newElem.textContent = languageElement.Name;
+            var languagesLength = information.Languages.length;
 
-            // Ajoutez une virgule si ce n'est pas le dernier élément
-            if (index < languagesLength - 1) {
-                newElem.textContent += ",";
-            }
+            information.Languages.forEach((languageElement, index) => {
+                var newElem = document.createElement('p');
+                newElem.className = "contenu";
+                newElem.textContent = languageElement;
 
-            langues_html.appendChild(newElem);
-        });
+                // Ajoutez une virgule si ce n'est pas le dernier élément
+                if (index < languagesLength - 1) {
+                    newElem.textContent += ",";
+                }
 
-        var flag=document.createElement('img');
-        flag.className="carteIle";
-        flag.setAttribute('src',information.Flags);
+                langues_html.appendChild(newElem);
+            });
+        }
 
-        images_html.appendChild(flag);
+        let flag_html = document.getElementById('Flag');
+        let image_html = document.getElementById('Image');
 
-        var image=document.createElement('img');
-        flag.className="carteIle";
-        flag.setAttribute('src',information.Image);
-
-        images_html.appendChild(flag);
+        if(information.Flags)
+            flag_html.setAttribute('src',information.Flags[0]);
+        if(information.Image)
+            image_html.setAttribute('src',information.Image);
 
 
 
@@ -236,8 +249,8 @@ function setPage(information) {
 
         archipel_html.addEventListener('click', function(event) {
             // Call the GoToPage function with the 'id' attribute as the parameter
-            var id = event.currentTarget.id;
-            GoToPage(id,"Archipelago");
+            var name = event.currentTarget;
+            GoToPage(name,"Archipelago");
         });
 
 
@@ -246,8 +259,8 @@ function setPage(information) {
         for (var i = 0; i < merChildren.length; i++) {
             merChildren[i].addEventListener('click', function(event) {
                 // Call the GoToPage function with the 'id' attribute as the parameter
-                var id = event.currentTarget.id;
-                GoToPage(id,"Sea");
+                var name = event.currentTarget;
+                GoToPage(name,"Sea");
             });
         }
 
@@ -256,21 +269,21 @@ function setPage(information) {
         for (var i = 0; i < paysChildren.length; i++) {
             paysChildren[i].addEventListener('click', function(event) {
                 // Call the GoToPage function with the 'id' attribute as the parameter
-                var id = event.currentTarget.id;
-                GoToPage(id,"Country");
+                var name = event.currentTarget;
+                GoToPage(name,"Country");
             });
         }       
 
         
-    }
+    
 
    
     
 }
 
-function GoToPage(id,type){
+function GoToPage(name,type){
 
-    var url = `../${type}/${type.toLowerCase()}.html?id=${id}`;
+    var url = `../${type}/${type.toLowerCase()}.html?name=${name}`;
     document.location.href = url;
 }
 
