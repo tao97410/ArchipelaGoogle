@@ -151,7 +151,13 @@ main{
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+
+    background-color: rgb(250, 248, 248);
+    border-radius: 2%;
+    padding-right: 0.2rem;
+    padding-left: 0.4rem;
 }
+
 
 .libelle{
     text-align: left;
@@ -165,7 +171,7 @@ main{
     justify-content: space-between;
     height: fit-content;
     width: 30rem ;
-    background-color: aqua;
+    /* background-color: aqua; */
 
 }
 

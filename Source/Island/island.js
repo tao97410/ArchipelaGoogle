@@ -171,11 +171,11 @@ function setPage(information) {
                 var newElem = document.createElement('a');
                 newElem.className = "contenu_cliquable";
                 newElem.setAttribute('Name',seaElement);
-                newElem.textContent = seaElement;
+                newElem.innerHTML = seaElement;
             
                 // Ajoutez une virgule si ce n'est pas le dernier élément
                 if (index < seasLength - 1) {
-                    newElem.textContent += ",";
+                    newElem.innerHTML += "<br>";
                 }
             
                 mer_html.appendChild(newElem);
@@ -193,11 +193,11 @@ function setPage(information) {
                 var newElem = document.createElement('a');
                 newElem.className = "contenu_cliquable";
                 newElem.setAttribute('Name',countryElement);
-                newElem.textContent = countryElement;
+                newElem.innerHTML = countryElement;
 
                 // Ajoutez une virgule si ce n'est pas le dernier élément
                 if (index < countriesLength - 1) {
-                    newElem.textContent += ",";
+                    newElem.innerHTML += "<br>";
                 }
 
                 pays_html.appendChild(newElem);
@@ -217,11 +217,11 @@ function setPage(information) {
             information.Languages.forEach((languageElement, index) => {
                 var newElem = document.createElement('p');
                 newElem.className = "contenu";
-                newElem.textContent = languageElement;
+                newElem.innerHTML =languageElement;
 
                 // Ajoutez une virgule si ce n'est pas le dernier élément
                 if (index < languagesLength - 1) {
-                    newElem.textContent += ",";
+                    newElem.innerHTML += "<br>";
                 }
 
                 langues_html.appendChild(newElem);
@@ -232,7 +232,7 @@ function setPage(information) {
         let image_html = document.getElementById('Image');
 
         if(information.Flags)
-            flag_html.setAttribute('src',information.Flags[0]);
+            flag_html.setAttribute('src',information.Flags);
         if(information.Image)
             image_html.setAttribute('src',information.Image);
 
@@ -244,7 +244,7 @@ function setPage(information) {
 
         archipel_html.addEventListener('click', function(event) {
             // Call the GoToPage function with the 'id' attribute as the parameter
-            var name = event.currentTarget;
+            var name = event.currentTarget.name;
             GoToPage(name,"Archipelago");
         });
 
@@ -254,7 +254,7 @@ function setPage(information) {
         for (var i = 0; i < merChildren.length; i++) {
             merChildren[i].addEventListener('click', function(event) {
                 // Call the GoToPage function with the 'id' attribute as the parameter
-                var name = event.currentTarget;
+                var name = event.currentTarget.name;
                 GoToPage(name,"Sea");
             });
         }
@@ -264,7 +264,7 @@ function setPage(information) {
         for (var i = 0; i < paysChildren.length; i++) {
             paysChildren[i].addEventListener('click', function(event) {
                 // Call the GoToPage function with the 'id' attribute as the parameter
-                var name = event.currentTarget;
+                var name = event.currentTarget.name;
                 GoToPage(name,"Country");
             });
         }       
