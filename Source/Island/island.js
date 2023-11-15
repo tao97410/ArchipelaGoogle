@@ -6,13 +6,14 @@ function getParameter(name) {
 function rechercher() {
     // Requête SPARQL à exécuter
 const sparqlQuery = `#defaultView:Table
-SELECT DISTINCT ?Name ?Desc ?Area ?Population ?Coordinates ?Archipelago ?SeasId ?SeasNames ?CountriesId ?CountriesNames ?Image 
+SELECT DISTINCT ?Page ?Name ?Desc ?Area ?Population ?Coordinates ?ArchipelagoId ?ArchipelagoName ?SeasId ?SeasNames ?CountriesId ?CountriesNames ?Image ?Demonym ?Languages ?Flags ?Government
   WHERE {
     # Instances of island (or of subclasses of island)
     ?Page (wdt:P31/wdt:P279*) wd:Q23442.
     ?Page rdfs:label ?Name.
+    ?Page wdt:P131 ?region.
     FILTER(lang(?Name) = 'fr')
-    FILTER(STR(?Name) = \"` + getParameter("ile") + `\")
+    FILTER(STR(?Name) = \"`+ getParameter("ile") +`\")
     OPTIONAL{?Page schema:description ?Desc.
     FILTER(lang(?Desc) = 'fr')}
     # Get the area of the island
@@ -20,8 +21,10 @@ SELECT DISTINCT ?Name ?Desc ?Area ?Population ?Coordinates ?Archipelago ?SeasId 
     OPTIONAL {?Page wdt:P2046 ?Area.}
     OPTIONAL {?Page wdt:P1082 ?Population.}
     OPTIONAL {?Page wdt:P625 ?Coordinates.}
-    OPTIONAL {?Page wdt:P361 ?Archipelago.
-    ?Archipelago (wdt:P31/wdt:P279*) wd:Q33837.}
+    OPTIONAL {?Page wdt:P361 ?ArchipelagoId.
+    ?ArchipelagoId (wdt:P31/wdt:P279*) wd:Q33837.
+    ?ArchipelagoId rdfs:label ?ArchipelagoName.
+    FILTER(lang(?ArchipelagoName) = 'fr')}
     OPTIONAL {?Page wdt:P206 ?SeasId.
              ?SeasId rdfs:label ?SeasNames.
              FILTER(lang(?SeasNames)='fr')}
@@ -29,8 +32,14 @@ SELECT DISTINCT ?Name ?Desc ?Area ?Population ?Coordinates ?Archipelago ?SeasId 
              ?CountriesId rdfs:label ?CountriesNames.
              FILTER(lang(?CountriesNames)='fr')}
     OPTIONAL{?Page wdt:P18 ?Image}
+    OPTIONAL{?region wdt:P1549 ?Demonym}
+    OPTIONAL{?region wdt:P37 ?LanguagesId.
+             ?LanguagesId rdfs:label ?Languages.
+             FILTER(lang(?Languages)='fr')}
+    OPTIONAL{?region wdt:P41 ?Flags}
+    OPTIONAL{?region wdt:P6 ?Government}
   }
-  ORDER BY ?Countries ?Seas
+  ORDER BY ?Government ?Countries ?Seas
   LIMIT 100`;
 
   // URL de l'endpoint SPARQL de Wikidata
@@ -50,23 +59,60 @@ SELECT DISTINCT ?Name ?Desc ?Area ?Population ?Coordinates ?Archipelago ?SeasId 
         dataFinal.Desc = data.results.bindings[0].Desc?.value;
         dataFinal.Area = data.results.bindings[0]?.Area?.value;
         dataFinal.Population = data.results.bindings[0]?.Population?.value;
-        dataFinal.Coordinates = data.results.bindings[0]?.Coordinates?.value;
-        dataFinal.Archipelago = data.results.bindings[0]?.Archipelago?.value;
         dataFinal.Image = data.results.bindings[0]?.Image?.value;
+        dataFinal.Demonym = data.results.bindings[0]?.Demonym?.value;
+        dataFinal.Government = data.results.bindings[data.results.bindings.length-1]?.Government?.value;    
+
+        let archi = {};
+        archi.id = data.results.bindings[0]?.ArchipelagoId?.value;
+        archi.Name = data.results.bindings[0]?.ArchipelagoName?.value;
+        let jsonArchi = JSON.stringify(archi);
+
+        dataFinal.Archipelago = jsonArchi;
+
+        // Utilisation d'une expression régulière pour extraire les valeurs de latitude et de longitude
+        let match = data.results.bindings[0]?.Coordinates?.value.match(/Point\(([-\d.]+) ([-\d.]+)\)/);
+
+        if (match) {
+          // match[1] contient la latitude, match[2] contient la longitude
+          let latitude = parseFloat(match[1]);
+          let longitude = parseFloat(match[2]);
+
+          // Création de l'objet JSON avec les attributs latitude et longitude
+          let jsonObject = { latitude, longitude };
+          let jsonCoordinates = JSON.stringify(jsonObject);
+
+          dataFinal.Coordinates = jsonCoordinates;
+        }else{
+          dataFinal.Coordinates = undefined;
+        }
+
+        dataFinal.Languages = [];
+        dataFinal.Flags = [];
         dataFinal.Seas = [];
         dataFinal.Countries = [];
         data.results.bindings.forEach(r => {
-          if(!dataFinal.Seas.some(row => row.includes(r?.SeasId?.value))){
-            let sea = {};
-            sea.id = r?.SeasId?.value;
-            sea.Name = r?.SeasNames?.value;
-            let jsonSea = JSON.stringify(sea);
+          if(!dataFinal.Languages.includes(r?.Languages?.value)){
+            dataFinal.Languages.push(r?.Languages?.value);
+          }
+          if(!dataFinal.Flags.includes(r?.Flags?.value)){
+            dataFinal.Flags.push(r?.Flags?.value);
+          }
+          let sea = {};
+          sea.id = r?.SeasId?.value;
+          sea.Name = r?.SeasNames?.value;
+          let jsonSea = JSON.stringify(sea);
+          if(!dataFinal.Seas.includes(jsonSea)){
             dataFinal.Seas.push(jsonSea);
           }
-          
-          if(!dataFinal.Countries.some(row => row.includes(r?.CountriesId?.value))){
-            dataFinal.Countries.push([r?.CountriesId?.value, r?.CountriesNames?.value]);
-          }          
+          let country = {};
+          country.id = r?.CountriesId?.value;
+          country.Name = r?.CountriesNames?.value;
+          let jsonCountry = JSON.stringify(country);
+          if(!dataFinal.Countries.includes(jsonCountry)){
+            dataFinal.Countries.push(jsonCountry);
+          }
+                  
         });
         let jsonDataFinal = JSON.stringify(dataFinal);
         console.log(jsonDataFinal);
