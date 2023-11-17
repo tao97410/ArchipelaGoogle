@@ -103,8 +103,8 @@ h1{
 }
 
 .resultContainer:hover{ 
-    background-color : #ec5930cb;
-    color:white
+    background-color : rgb(207, 206, 206);
+    color:black;
 }
 
 /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!GENERAL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
