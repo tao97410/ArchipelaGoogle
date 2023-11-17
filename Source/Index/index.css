@@ -10,7 +10,7 @@
 
 
 h2{
-    margin-bottom: 1em;
+    margin-bottom: 0.5em;
     font-weight: bold;
     font-size:3em;
     color: white;
@@ -99,6 +99,11 @@ body{
 }
 
 li{
-
     list-style: none;
+}
+
+/* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! MAIN !!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
+
+main {
+    padding-top: 5vh;
 }

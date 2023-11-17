@@ -8,16 +8,19 @@
     <!-- Include Tailwind CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
     <link rel="stylesheet" href="index.css">
-    <script src="index.js"></script>    
+    <script src="./index.js"></script>
     <title>ArchipelaGoogle</title>
 </head>
 
 <body>
     <header class="header">
         <ul class="header_motor">
-            <li><a href="../../Source/"> <img  class="logo" src="../../assets/logo.png" alt="logoMoteurRecherche"></a></li>
-            <li class="" id="Archipel"><a href="../../Source/index.html"><span>Archipel </span></a></li>
-            <li class="maclass" > <p> Tous les voyages débutent par une recherche</p></li>
+            <li><a href="./index.html"> <img class="logo" src="../../assets/logo.png" alt="logoMoteurRecherche"></a>
+            </li>
+            <li class="" id="Archipel"><a href="./index.html"><span>Archipel </span></a></li>
+            <li class="maclass">
+                <p> Tous les voyages débutent par une recherche</p>
+            </li>
         </ul>
 
     </header>
@@ -26,8 +29,14 @@
         <section class="search-section">
             <h2>Chercher l'île de vos rêves</h2>
             <form class="border-2 rounded-xl p-2 bg-black bg-opacity-60" id="search-form">
-                <input id="search-input" onchange="" type="text" id="search-input" placeholder="Entrer le nom d'une île...">
+                <input id="search-input" type="text" placeholder="Entrer le nom d'une île..."
+                    list="islands" onsubmit="() => {rechercher(); alert('hello1')}">
                 <img onclick="rechercher()" id="search-icon" src="../../assets/search-icon-white.svg" alt="Rechercher">
+
+                <!-- Datalist with island (name) suggestions -->
+                <datalist id="islands">
+                    <option value="Réunion">Réunion</option>
+                </datalist>
             </form>
         </section>
     </main>
