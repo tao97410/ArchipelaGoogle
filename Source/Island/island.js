@@ -1,5 +1,6 @@
 // Constants
 const DBPEDIA_API = 'https://dbpedia.org/snorql'
+let searchResults;
 
 function getParameter(name) {
   const urlParams = new URLSearchParams(window.location.search);
@@ -294,12 +295,12 @@ async function findWikipediaPage(title) {
     );
 
     const data = await response.json();
-    const searchResults = data.query.search;
+    searchResults = data.query.search;
 
     if (searchResults.length > 0) {
       const firstResult = searchResults[0];
       const pageTitle = firstResult.title;
-      console.log('Titre de la page Wikipedia :', pageTitle);
+      console.log('Titre de la page Wikipedia :', searchResults);
       console.log(pageTitle)
       return pageTitle;
     } else {
@@ -312,14 +313,15 @@ async function findWikipediaPage(title) {
   }
 }
 
-async function fetchWikipediaIntroduction(pageTitle) {
+async function fetchWikipediaIntroduction(pageTitle, compteur) {
   try {
     const response = await fetch(`https://fr.wikipedia.org/w/api.php?` +
       new URLSearchParams({
         action: 'query',
         format: 'json',
-        prop: 'extracts',
+        prop: 'extracts|categories',
         titles: pageTitle,
+        cllimit:'100',
         origin: '*',
         exintro: true,
       }), {
@@ -330,26 +332,43 @@ async function fetchWikipediaIntroduction(pageTitle) {
 
     const data = await response.json();
     const pages = data.query.pages;
-    console.log(data);
     const pageId = Object.keys(pages)[0];
-    console.log("Page id : " + pageId)
-    if (pageId !== '-1') {
-      const introduction = pages[pageId].extract;
-      console.log('Introduction de la page Wikipedia :', introduction);
-      return introduction;
-    } else {
-      console.log('Page non trouvée.');
-      return null;
+    
+    let estPresent = false;
+    pages[pageId].categories.forEach(c => {
+      if(c.title == "Catégorie:Portail:Îles/Articles liés" || c.title=="Catégorie:Portail:Îles"){
+        estPresent = true;
+      }
+    });
+    if(estPresent){
+      console.log(data);
+      console.log("Page id : " + pageId)
+      if (pageId !== '-1') {
+        const introduction = pages[pageId].extract;
+        console.log('Introduction de la page Wikipedia :', introduction);
+        return introduction;
+      } else {
+        console.log('Page non trouvée.');
+        return null;
+      }
+    }else{
+      if(compteur>=3 || searchResults.length == compteur ){
+        return "Pas d'article associés sur Wikipedia";
+      }else{
+        compteur++;
+        return fetchWikipediaIntroduction(searchResults[compteur].title, compteur);            
+      }
+      
     }
   } catch (error) {
     console.error('Erreur lors de la récupération de l\'introduction :', error.message);
     return null;
-  }
+  }  
 }
 
 window.onload = async function () {
   rechercher();
   var islandDescription = document.getElementById("description-ile");
   let nomPage = await findWikipediaPage(getParameter("ile"));
-  islandDescription.innerHTML = await fetchWikipediaIntroduction(nomPage)
+  islandDescription.innerHTML = await fetchWikipediaIntroduction(nomPage,0)
 };
