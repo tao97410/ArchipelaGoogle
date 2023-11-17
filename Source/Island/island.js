@@ -285,12 +285,7 @@ function GoToPage(name,type){
     document.location.href = url;
 }
 
-window.onload = function () {
-    rechercher();
-  };
-
 async function findWikipediaPage(title) {
-  title = "Île " + title
   try {
     const response = await fetch('https://fr.wikipedia.org/w/api.php?' +
       new URLSearchParams({
@@ -345,8 +340,8 @@ async function fetchWikipediaIntroduction(pageTitle) {
     console.log("Page id : " + pageId)
     if (pageId !== '-1') {
       const introduction = pages[pageId].extract;
-      //console.log('Introduction de la page Wikipedia :', introduction);
-      //return introduction;
+      console.log('Introduction de la page Wikipedia :', introduction);
+      return introduction;
     } else {
       console.log('Page non trouvée.');
       return null;
@@ -358,7 +353,9 @@ async function fetchWikipediaIntroduction(pageTitle) {
 }
 
 window.onload = async function () {
+  
+  rechercher();
   var islandDescription = document.getElementById("description-ile");
-  let nomPage = await findWikipediaPage("Groenland");
+  let nomPage = await findWikipediaPage(getParameter("ile"));
   islandDescription.innerHTML = await fetchWikipediaIntroduction(nomPage)
 };
