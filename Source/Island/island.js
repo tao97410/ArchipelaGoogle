@@ -113,7 +113,7 @@ SELECT DISTINCT ?Page ?Name ?Desc ?Area ?Population ?Coordinates ?Archipelago ?S
             dataFinal.Countries.push(r?.Countries?.value);
 
           }
-                  
+
         });
         let jsonDataFinal = JSON.stringify(dataFinal);
         console.log(JSON.parse(jsonDataFinal));
@@ -165,7 +165,7 @@ function setPage(information) {
         nomIle_html.innerHTML=information.Name;
 
         if (information.Desc)
-            statut_html.innerHTML=information.Desc;
+        statut_html.innerHTML=information.Desc;
         else
             libelle_Statut.remove();
         if (information.Area)
@@ -173,7 +173,7 @@ function setPage(information) {
         else
             libelle_Area.remove();
         if (information.Population)
-            population_html.innerHTML = information.Population;
+        population_html.innerHTML = information.Population;
         else
             libelle_Population.remove();    
         if (information.Coordinates)
@@ -181,7 +181,7 @@ function setPage(information) {
         else
             libelle_Coordinates.remove();    
 
-
+       
         
         if (information.Archipelago)
         {
@@ -194,21 +194,21 @@ function setPage(information) {
         // Extract names from each sea element and push them into the seaNames array
         if(information.Seas[0])
         {
-            var seasLength = information.Seas.length;
+        var seasLength = information.Seas.length;
 
-            information.Seas.forEach((seaElement, index) => {
-                var newElem = document.createElement('a');
-                newElem.className = "contenu_cliquable";
+        information.Seas.forEach((seaElement, index) => {
+            var newElem = document.createElement('a');
+            newElem.className = "contenu_cliquable";
                 newElem.setAttribute('Name',seaElement);
                 newElem.innerHTML = seaElement;
-            
-                // Ajoutez une virgule si ce n'est pas le dernier élément
-                if (index < seasLength - 1) {
+        
+            // Ajoutez une virgule si ce n'est pas le dernier élément
+            if (index < seasLength - 1) {
                     newElem.innerHTML += "<br>";
-                }
-            
-                mer_html.appendChild(newElem);
-            });
+            }
+        
+            mer_html.appendChild(newElem);
+        });
         }
         else 
             libelle_Seas.remove();
@@ -218,21 +218,21 @@ function setPage(information) {
 
         if(information.Countries[0])
         {
-            var countriesLength = information.Countries.length;
+        var countriesLength = information.Countries.length;
 
-            information.Countries.forEach((countryElement, index) => {
-                var newElem = document.createElement('a');
-                newElem.className = "contenu_cliquable";
+        information.Countries.forEach((countryElement, index) => {
+            var newElem = document.createElement('a');
+            newElem.className = "contenu_cliquable";
                 newElem.setAttribute('Name',countryElement);
                 newElem.innerHTML = countryElement;
 
-                // Ajoutez une virgule si ce n'est pas le dernier élément
-                if (index < countriesLength - 1) {
+            // Ajoutez une virgule si ce n'est pas le dernier élément
+            if (index < countriesLength - 1) {
                     newElem.innerHTML += "<br>";
-                }
+            }
 
-                pays_html.appendChild(newElem);
-            }); 
+            pays_html.appendChild(newElem);
+        });
         }
         else  
            libelle_Countries.remove();
@@ -310,8 +310,8 @@ function setPage(information) {
                 var name = event.currentTarget.name;
                 GoToPage(name,"Country");
             });
-        }         
-    
+        }
+        
 }
 
 function GoToPage(name,type){
@@ -319,9 +319,9 @@ function GoToPage(name,type){
     var url = `../${type}/${type.toLowerCase()}.html?name=${name}`;
     document.location.href = url;
 }
+        
 
-
-
+        
 async function findWikipediaPage(title) {
   try {
     const response = await fetch('https://fr.wikipedia.org/w/api.php?' +
@@ -374,7 +374,7 @@ async function fetchWikipediaIntroduction(pageTitle, compteur) {
     const data = await response.json();
     const pages = data.query.pages;
     const pageId = Object.keys(pages)[0];
-
+   
     
     let estPresent = false;
     pages[pageId].categories.forEach(c => {
@@ -399,8 +399,8 @@ async function fetchWikipediaIntroduction(pageTitle, compteur) {
       }else{
         compteur++;
         return fetchWikipediaIntroduction(searchResults[compteur].title, compteur);            
-      }
-      
+}
+
 
     }
   } catch (error) {

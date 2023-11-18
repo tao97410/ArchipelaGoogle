@@ -1,13 +1,187 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="./country.js"> </script>
+    <link rel="stylesheet" type="text/css" href="country.css" />     
+    <!-- Include Tailwind CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
     <title>Country</title>
+
+  
+
 </head>
+
+
+
+
+
 <body>
-    Country 
+
+    <header class="header">
+        <ul class="header_motor">
+            <li><a href="../Index/index.html"> <img  class="logo" src="../../assets/logo.png" alt="logoMoteurRecherche"></a></li>
+            <li class="" id="Archipel"><a href="../Index/index.html"><span>Archipel </span></a></li>
+            <li class="maclass" > <p> Tous les voyages débutent par une recherche</p></li>
+        </ul>
+    
+    
+    </header>
+
+    <main>
+        <div class="cadreInfos">
+            <ul>
+
+                <li>
+                    <h1 id="Content_Name"> </h1>
+                </li>
+
+                <li id="li_loading">
+                    <div id="loading" class="loading shadow-2xl"></div>
+                </li>
+                <li>
+                    <div class="div_images" id="images">
+                        <img class="carteIle" src="" alt="Drapeau de l'ile" id="Content_Flags">
+                        <img class="carteIle" src="" alt="Image de l'ile" id="Content_Image">
+                        <img class="carteIle" src="" alt="Image de l'ile" id="Content_Map">
+                    </div>
+                    
+                </li>
+
+                <li>
+                    <div class="div_cadreInfos "id="administration">
+                        <h3 >Administration</h3>
+                    </div>
+                </li>
+                <li>
+                    <div class="div_section">
+                        <p class="libelle" id="Libelle_Official"> Nom officiel</p>
+                        <p class="contenu" id="Content_Official"></p>
+                    </div>
+                <li>
+                <li>
+                    <div class="div_section">
+                        <p class="libelle" id="Libelle_Motto"> Devise</p>
+                        <p class="contenu" id="Content_Motto"></p>
+                    </div>
+                <li>
+                    <div class="div_section">
+                        <p class="libelle" id="Libelle_Desc"> Statut</p>
+                        <p class="contenu" id="Content_Desc"></p>
+                    </div>
+                </li>
+                <li>
+                    <div class="div_section">
+                            <p class="libelle" id="Libelle_Regime">Regime</p>
+                            <p class="contenu" id="Content_Regime"></p>
+                    </div> 
+                </li>
+                <li>
+                    <div class="div_section">
+                        <p class="libelle" id="Libelle_Currency"> Monnaie</p>
+                        <p class="contenu" id="Content_Currency"></p>
+                    </div>
+                
+                </li>
+                <li>
+                    <div class="div_section">
+                            <p class="libelle" id="Libelle_Head">Chef administratif</p>
+                            <p class="contenu" id="Content_Head"></p>
+                    </div> 
+                </li>
+                <li>
+                    <div class="div_section">
+                            <p class="libelle" id="Libelle_Capital">Capital</p>
+                            <p class="contenu" id="Content_Capital"></p>
+                    </div> 
+                </li>
+                <li>
+                    <div class="div_cadreInfos "id="administration">
+                        <h3 >Démographie</h3>
+                    </div>
+                </li>
+                <li>
+                    <div class="div_section">
+                        <p class="libelle" id="Libelle_Demonym"> Gentilé</p>
+                        <p class="contenu" id="Content_Demonym"></p>
+                    </div>
+                
+                </li>
+                <li>
+                    <div class="div_section">
+                        <p class="libelle" id="Libelle_Languages"> Langue(s) officielle(s)</p>
+                        <p class="contenu" id="Content_Languages"> </p>
+                    </div>
+                
+                </li>
+                <li>
+                    <div class="div_section">
+                        <p class="libelle" id="Libelle_Population"> Nombre d'habitants</p>
+                        <p class="contenu" id="Content_Population">hab</p>
+                    </div>
+                
+                </li>
+                <li>
+                    <div class="div_section">
+                        <p class="libelle" id="Libelle_IDH"> IDH</p>
+                        <p class="contenu" id="Content_IDH"></p>
+                    </div>
+                
+                </li>
+                
+
+                <li>
+                    <div class="div_cadreInfos "id="administration">
+                        <h3 >Géographie</h3>
+                    </div>
+                </li>
+                <li>
+                    <div class="div_section">
+                        <p class="libelle" id="Libelle_Continent"> Continent</p>
+                        <p class="contenu" id="Content_Continent"></p>
+                    </div>
+                
+                </li>
+                <li>
+                    <div class="div_section">
+                        <p class="libelle" id="Libelle_Area"> Superficie</p>
+                        <p class="contenu" id="Content_Area">km²</p>
+                    </div>
+                
+                </li>
+                <li>
+                    <div class="div_section">
+                        <p class="libelle" id="Libelle_Coordinates"> Coordonnées</p>
+                        <p class="contenu" id="Content_Coordinates"></p>
+                    </div>
+                
+                </li>
+                <li>
+                    <div class="div_section">
+                        <p class="libelle" id="Libelle_Seas">Mers</p>
+                        <div class="contenu" id="Content_Seas">
+
+                        </div>
+                    </div>
+                </li>
+               
+                
+
+                
+            </ul>
+        </div>
+    
+        <div id="description-ile" class="main">
+        </div>
+    </main>
+   
+
+    
+
 </body>
+<script src="./country.js"> </script>
+
 </html>
