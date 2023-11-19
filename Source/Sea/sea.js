@@ -68,7 +68,7 @@ function rechercher() {
         const data = await response.json();
         let dataFinal = {};    
         document.getElementById("loading").style.display = "none";      
-        document.getElementById("images").style.visibility="visible"      
+        document.getElementById("images").style.visibility="visible"  ;    
         dataFinal.Name = data.results.bindings[0].Name.value;
         dataFinal.Desc = data.results.bindings[0].Desc?.value;
         dataFinal.Area = data.results.bindings[0]?.Area?.value;
@@ -116,9 +116,7 @@ function setPage(information) {
       
           // Create an array with the elements and assign it to the key in the dictionary
           dictionnaireHTML[key] = [libelleElement, contentElement];
-      
-          // Optionally, you can also assign the corresponding values from the JSON object
-          // dictionnaireHTML[key] = [libelleElement, contentElement, information[key]];
+    
         }
       }
 
@@ -146,7 +144,6 @@ function setPage(information) {
             
                         information[key].forEach((Element,index) => {
                             var newElem = document.createElement('a');
-                            newElem.className = "contenu_cliquable";
                             newElem.setAttribute('Name',Element);
                             newElem.innerHTML = Element;
                         
@@ -190,7 +187,7 @@ function setPage(information) {
         function removeUnusedElements(elements) {
           for (var i = elements.length - 1; i >= 0; i--) {
             if (!isInDictionary(elements[i])) {
-              elements[i].parentNode.removeChild(elements[i]);
+              elements[i].parentNode.parentNode.remove();
             }
           }
         }
@@ -210,12 +207,6 @@ function setPage(information) {
       }
       console.log(dictionnaireHTML);
         
-        
-        
-    
-
-   
-    
 }
 
 function GoToPage(name,type){

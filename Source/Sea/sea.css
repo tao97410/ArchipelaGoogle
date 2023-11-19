@@ -90,13 +90,11 @@ main{
 
 
 .cadreInfos {
-    /* padding: 0rem 2rem; */
     flex: 2;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding-bottom: 2rem;
-    /* background-color: rgb(231, 230, 230);  */
   }
 
 .cadreInfos ul {
@@ -113,14 +111,6 @@ main{
     
     
 }
-/* 
-.cadreInfos ul li .div_images{
-    width: 100%;
-    margin:0.5rem 0 0.5rem 0;
-    padding:0 0.2rem 0 0.2rem;
-    justify-content: center;
-    
-} */
 
 .div_cadreInfos{
     background-color: rgb(207, 206, 206);    
@@ -152,7 +142,6 @@ main{
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-
     background-color: rgb(236, 234, 234);
     border-radius: 2%;
     padding-right: 0.2rem;
@@ -183,7 +172,8 @@ main{
 }
 
 .contenu_cliquable{
-    width: 80%;
+    width: 50%;
+    margin-right: 10%;
     color:rgb(0, 89, 255) ;
     text-decoration: underline;
     cursor: pointer;

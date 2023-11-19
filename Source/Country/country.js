@@ -160,9 +160,7 @@ function setPage(information) {
   
       // Create an array with the elements and assign it to the key in the dictionary
       dictionnaireHTML[key] = [libelleElement, contentElement];
-  
-      // Optionally, you can also assign the corresponding values from the JSON object
-      // dictionnaireHTML[key] = [libelleElement, contentElement, information[key]];
+
     }
   }
   console.log(dictionnaireHTML); 
@@ -219,7 +217,6 @@ function setPage(information) {
     // Get all elements with class "libelle" or "contenu"
     var libelleElements = document.getElementsByClassName("libelle");
     var contenuElements = document.getElementsByClassName("contenu");
-
     // Function to check if an element's ID is in the resultDictionary
     function isInDictionary(element) {
       var id = element.id.substring(element.id.lastIndexOf("_") + 1);
@@ -230,7 +227,7 @@ function setPage(information) {
     function removeUnusedElements(elements) {
       for (var i = elements.length - 1; i >= 0; i--) {
         if (!isInDictionary(elements[i])) {
-          elements[i].parentNode.removeChild(elements[i]);
+          elements[i].parentNode.parentNode.remove();
         }
       }
     }
@@ -248,14 +245,7 @@ function setPage(information) {
           var name = event.currentTarget.name;
           GoToPage(name,"Sea");
       });
-  }
-     
-
-        
-    
-
-   
-    
+  } 
 }
 
 function GoToPage(name,type){

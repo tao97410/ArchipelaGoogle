@@ -165,21 +165,24 @@ function setPage(information) {
         nomIle_html.innerHTML=information.Name;
 
         if (information.Desc)
-        statut_html.innerHTML=information.Desc;
-        else
-            libelle_Statut.remove();
+          statut_html.innerHTML=information.Desc;
+        else{
+          libelle_Statut.parentNode.parentNode.remove();
+        }
+            
         if (information.Area)
             area_html.innerHTML = information.Area+"km²";
         else
-            libelle_Area.remove();
+            libelle_Area.parentNode.parentNode.remove();
         if (information.Population)
-        population_html.innerHTML = information.Population;
+          population_html.innerHTML = information.Population;
         else
-            libelle_Population.remove();    
+            libelle_Population.parentNode.parentNode.remove();
         if (information.Coordinates)
             coordinates_html.innerHTML="Lat "+information.Coordinates.latitude + "° </br> Long " + information.Coordinates.longitude+"°"; 
         else
-            libelle_Coordinates.remove();    
+            libelle_Coordinates.parentNode.parentNode.remove();
+          
 
        
         
@@ -189,7 +192,7 @@ function setPage(information) {
             archipel_html.setAttribute('Name',information.Archipelago);
         }
         else 
-            libelle_Archipel.remove();
+            libelle_Archipel.parentNode.parentNode.remove();
 
         // Extract names from each sea element and push them into the seaNames array
         if(information.Seas[0])
@@ -198,9 +201,8 @@ function setPage(information) {
 
         information.Seas.forEach((seaElement, index) => {
             var newElem = document.createElement('a');
-            newElem.className = "contenu_cliquable";
-                newElem.setAttribute('Name',seaElement);
-                newElem.innerHTML = seaElement;
+            newElem.setAttribute('Name',seaElement);
+            newElem.innerHTML = seaElement;
         
             // Ajoutez une virgule si ce n'est pas le dernier élément
             if (index < seasLength - 1) {
@@ -211,7 +213,7 @@ function setPage(information) {
         });
         }
         else 
-            libelle_Seas.remove();
+            libelle_Seas.parentNode.parentNode.remove();
 
         // Join the seaNames array with commas to create a comma-separated list
         
@@ -235,16 +237,16 @@ function setPage(information) {
         });
         }
         else  
-           libelle_Countries.remove();
+           libelle_Countries.parentNode.parentNode.remove();
 
         if(information.Demonym)
           gentile_html.innerHTML=information.Demonym;
         else
-          Libelle_Gentile.remove();
+          Libelle_Gentile.parentNode.parentNode.remove();
         if(information.Government)
           chefAdministratif_html.innerHTML=information.Government;
         else
-          Libelle_ChefAdministratif.remove();
+          Libelle_ChefAdministratif.parentNode.parentNode.remove();
 
 
         if(information.Languages[0])
@@ -265,7 +267,7 @@ function setPage(information) {
             });
         }
         else
-          libelle_Langues.remove();
+          libelle_Langues.parentNode.parentNode.remove();
 
         let flag_html = document.getElementById('Flag');
         let image_html = document.getElementById('Image');

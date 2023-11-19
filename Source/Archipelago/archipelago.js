@@ -8,6 +8,8 @@ function getParameter(name) {
 
 function rechercher() {
   // Requête SPARQL à exécuter
+  document.getElementById("loading").style.display = "block";
+  document.getElementById("images").style.visibility="hidden";
   const sparqlQuery = `#defaultView:Table
   SELECT DISTINCT ?Page ?Name ?Desc ?Area ?Seas ?Countries ?Image 
     WHERE {
@@ -45,7 +47,9 @@ function rechercher() {
       const response = await fetch(sparqlUrl);
       if (response.ok) {
         const data = await response.json();
-        let dataFinal = {};          
+        let dataFinal = {};   
+        document.getElementById("loading").style.display = "none";      
+        document.getElementById("images").style.visibility="visible"  ;           
         dataFinal.Name = data.results.bindings[0].Name.value;
         dataFinal.Desc = data.results.bindings[0].Desc?.value;
         dataFinal.Area = data.results.bindings[0]?.Area?.value;
@@ -64,9 +68,7 @@ function rechercher() {
         });
         let jsonDataFinal = JSON.stringify(dataFinal);
         console.log(JSON.parse(jsonDataFinal));
-
-        console.log(JSON.parse(jsonDataFinal));
-
+        setPage(JSON.parse(jsonDataFinal));
       } else {
         console.error('Erreur lors de la requête SPARQL :', response.statusText);
       }
@@ -78,230 +80,197 @@ function rechercher() {
 }
 
 function setPage(information) {
-        var tbody=document.getElementsByTagName("tbody");
-        var nomIle_html=document.getElementById('Content_NomIle');
-        var statut_html=document.getElementById('Content_Statut');
-        var area_html = document.getElementById('Content_Area');
-        var population_html = document.getElementById('Content_Population');
-        var coordonates_html = document.getElementById('Content_Coordonates');
+  var dictionnaireHTML = {};
 
-        var archipel_html = document.getElementById('Content_Archipel');
-        var mer_html = document.getElementById('Content_Seas');
-        var pays_html = document.getElementById('Content_Countries');
-        var gentile_html=  document.getElementById('Content_Gentile');
-        var langues_html=  document.getElementById('Content_Langues');
-        var chefAdministratif_html=  document.getElementById('Content_ChefAdministratif');
-        var images_html= document.getElementById('images');
+  // Iterate through the keys in the JSON object
+  for (var key in information) {
+    if (information.hasOwnProperty(key)) {
+      // Construct the element IDs based on the current key
+      var libelleId = "Libelle_" + key;
+      var contentId = "Content_" + key;
+  
+      // Get the elements using document.getElementById
+      var libelleElement = document.getElementById(libelleId);
+      var contentElement = document.getElementById(contentId);
+  
+      // Create an array with the elements and assign it to the key in the dictionary
+      dictionnaireHTML[key] = [libelleElement, contentElement];
+
+    }
+  }
+
+  dictionnaireHTML["Official"]=["Libelle_Official","Content_Official"]
+  var nomOfficiel=document.getElementById('Content_Official');
+  nomOfficiel.innerHTML=information.Name;
+    
+  for (var key in dictionnaireHTML) {
+    if (dictionnaireHTML.hasOwnProperty(key)) {
+      // Récupérer le tableau associé à la clé
+        var elementArray = dictionnaireHTML[key];
         
-
-
-
-        console.log(information.Name);
+    
+        // Vérifier si le deuxième élément n'est pas nul et a la classe "contenu"
+        if (elementArray[1] !== null && elementArray[1].classList) {
+          // Mettre la valeur associée à la clé dans le HTML du deuxième élément
+          if(elementArray[1].classList.contains("carteIle"))
+            elementArray[1].setAttribute('src',information[key]); //cas des iamges
+          else{
+            if (elementArray[1].tagName == "P" || elementArray[1].tagName == "H1" )
+            elementArray[1].insertAdjacentHTML('afterbegin', information[key] + " ");
+            else if (elementArray[1].tagName == "DIV"){ //un tableau
+              if(information[key][0])
+              {
+                    var Length = information[key].length;
         
-        nomIle_html.innerHTML=information.Name;
-
-        if (information.Desc)
-            statut_html.innerHTML=information.Desc;
-        if (information.Area)
-            area_html.innerHTML = information.Area+"km²";
-        if (information.Population)
-            population_html.innerHTML = information.Population;
-        if (information.Coordinates)
-            coordonates_html.innerHTML="Lat "+information.Coordinates.latitude + "° ; Long " + information.Coordinates.longitude+"°"; 
-
-
-        
-        if (information.Archipelago)
-        {
-            archipel_html.innerHTML = information.Archipelago;
-            archipel_html.setAttribute('Name',information.Archipelago);
-        }
-
-        // Extract names from each sea element and push them into the seaNames array
-        if(information.Seas)
-        {
-            var seasLength = information.Seas.length;
-
-            information.Seas.forEach((seaElement, index) => {
-                var newElem = document.createElement('a');
-                newElem.className = "contenu_cliquable";
-                newElem.setAttribute('Name',seaElement);
-                newElem.innerHTML = seaElement;
+                    information[key].forEach((Element,index) => {
+                        var newElem = document.createElement('a');
+                        newElem.setAttribute('Name',Element);
+                        newElem.innerHTML = Element;
+                    
+                        // Ajoutez une virgule si ce n'est pas le dernier élément
+                        if (index < Length - 1) {
+                            newElem.innerHTML += "<br>";
+                        }
+                    
+                        elementArray[1].appendChild(newElem);
+                    });
+            }
+            else{
+              elementArray[0].remove();
+            }
             
-                // Ajoutez une virgule si ce n'est pas le dernier élément
-                if (index < seasLength - 1) {
-                    newElem.innerHTML += "<br>";
-                }
+          }
+          }
+          } else {
+          // Supprimer le premier élément du tableau
+            if (elementArray[0]){
+              // elementArray[0].remove();
+              // elementArray[1].remove();
+            }
+              
+        }       
             
-                mer_html.appendChild(newElem);
-            });
-        }
 
-        // Join the seaNames array with commas to create a comma-separated list
-        
+      }
+    }
+    //REMOVE
+    var libelleElements = document.getElementsByClassName("libelle");
+    var contenuElements = document.getElementsByClassName("contenu");
+    var imageElements = document.getElementsByClassName("carteIle");
 
-        if(information.Countries)
-        {
-            var countriesLength = information.Countries.length;
+    // Function to check if an element's ID is in the resultDictionary
+    function isInDictionary(element) {
+      var id = element.id.substring(element.id.lastIndexOf("_") + 1);
+      return dictionnaireHTML.hasOwnProperty(id);
+    }
 
-            information.Countries.forEach((countryElement, index) => {
-                var newElem = document.createElement('a');
-                newElem.className = "contenu_cliquable";
-                newElem.setAttribute('Name',countryElement);
-                newElem.innerHTML = countryElement;
+    // Remove elements that are not in the resultDictionary
+    function removeUnusedElements(elements) {
+      for (var i = elements.length - 1; i >= 0; i--) {
+        if (!isInDictionary(elements[i]) && (elements[i].tagName !="img" ||elements[i].tagName !="div" ) )
+          elements[i].remove();
+        else if(elements[i].tagName =="img" || elements[i].tagName =="div")
+          elements[i].parentNode.parentNode.remove();
+      }
+    }
 
-                // Ajoutez une virgule si ce n'est pas le dernier élément
-                if (index < countriesLength - 1) {
-                    newElem.innerHTML += "<br>";
-                }
+    // Call the function for both "libelle" and "contenu" elements
+    removeUnusedElements(libelleElements);
+    removeUnusedElements(contenuElements);
+    removeUnusedElements(imageElements);
 
-                pays_html.appendChild(newElem);
-            }); 
-        }
+  var countries = dictionnaireHTML["Countries"][1].children;
 
-        if(information.Demonym)
-        gentile_html.innerHTML=information.Demonym;
-        if(information.Government)
-        chefAdministratif_html.innerHTML=information.Government;
-
-        if(information.Languages)
-        {
-
-            var languagesLength = information.Languages.length;
-
-            information.Languages.forEach((languageElement, index) => {
-                var newElem = document.createElement('p');
-                newElem.className = "contenu";
-                newElem.innerHTML =languageElement;
-
-                // Ajoutez une virgule si ce n'est pas le dernier élément
-                if (index < languagesLength - 1) {
-                    newElem.innerHTML += "<br>";
-                }
-
-                langues_html.appendChild(newElem);
-            });
-        }
-
-        let flag_html = document.getElementById('Flag');
-        let image_html = document.getElementById('Image');
-
-        if(information.Flags)
-            flag_html.setAttribute('src',information.Flags);
-        if(information.Image)
-            image_html.setAttribute('src',information.Image);
-
-
-
-
-        // EVENT LISTENERS
-
-
-        archipel_html.addEventListener('click', function(event) {
-            // Call the GoToPage function with the 'id' attribute as the parameter
-            var name = event.currentTarget.name;
-            GoToPage(name,"Archipelago");
-        });
-
-
-        var merChildren = mer_html.children;
-
-        for (var i = 0; i < merChildren.length; i++) {
-            merChildren[i].addEventListener('click', function(event) {
-                // Call the GoToPage function with the 'id' attribute as the parameter
-                var name = event.currentTarget.name;
-                GoToPage(name,"Sea");
-            });
-        }
-
-        var paysChildren = pays_html.children;
-
-        for (var i = 0; i < paysChildren.length; i++) {
-            paysChildren[i].addEventListener('click', function(event) {
-                // Call the GoToPage function with the 'id' attribute as the parameter
-                var name = event.currentTarget.name;
-                GoToPage(name,"Country");
-            });
-        }         
+  for (var i = 0; i < countries.length; i++) {
+      countries[i].addEventListener('click', function(event) {
+          // Call the GoToPage function with the 'id' attribute as the parameter
+          var name = event.currentTarget.name;
+          GoToPage(name,"Country");
+      });
+  }
+  console.log(dictionnaireHTML);
     
 }
 
 function GoToPage(name,type){
 
-    var url = `../${type}/${type.toLowerCase()}.html?name=${name}`;
-    document.location.href = url;
+var url = `../${type}/${type.toLowerCase()}.html?name=${name}`;
+document.location.href = url;
 }
 
+
 async function findWikipediaPage(title) {
-  try {
-    const response = await fetch('https://fr.wikipedia.org/w/api.php?' +
-      new URLSearchParams({
-        action: 'query',
-        format: 'json',
-        list: 'search',
-        origin: '*',
-        srsearch: title,
-        srnamespace: 0, // Limite la recherche aux articles
-      })
-    );
 
-    const data = await response.json();
-    const searchResults = data.query.search;
+try {
+const response = await fetch('https://fr.wikipedia.org/w/api.php?' +
+  new URLSearchParams({
+    action: 'query',
+    format: 'json',
+    list: 'search',
+    origin: '*',
+    srsearch: title,
+    srnamespace: 0, // Limite la recherche aux articles
+  })
+);
 
-    if (searchResults.length > 0) {
-      const firstResult = searchResults[0];
-      const pageTitle = firstResult.title;
-      console.log('Titre de la page Wikipedia :', pageTitle);
-      console.log(pageTitle)
-      return pageTitle;
-    } else {
-      console.log('Aucun résultat trouvé pour la recherche.');
-      return null;
-    }
-  } catch (error) {
-    console.error('Erreur lors de la recherche sur Wikipedia :', error.message);
-    return null;
-  }
+const data = await response.json();
+const searchResults = data.query.search;
+
+if (searchResults.length > 0) {
+  const firstResult = searchResults[0];
+  const pageTitle = firstResult.title;
+  console.log('Titre de la page Wikipedia :', pageTitle);
+  console.log(pageTitle)
+  return pageTitle;
+} else {
+  console.log('Aucun résultat trouvé pour la recherche.');
+  return null;
+}
+} catch (error) {
+console.error('Erreur lors de la recherche sur Wikipedia :', error.message);
+return null;
+}
 }
 
 async function fetchWikipediaIntroduction(pageTitle) {
-  try {
-    const response = await fetch(`https://fr.wikipedia.org/w/api.php?` +
-      new URLSearchParams({
-        action: 'query',
-        format: 'json',
-        prop: 'extracts',
-        titles: pageTitle,
-        origin: '*',
-        exintro: true,
-      }), {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+try {
+const response = await fetch(`https://fr.wikipedia.org/w/api.php?` +
+  new URLSearchParams({
+    action: 'query',
+    format: 'json',
+    prop: 'extracts',
+    titles: pageTitle,
+    origin: '*',
+    exintro: true,
+  }), {
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
-    const data = await response.json();
-    const pages = data.query.pages;
-    console.log(data);
-    const pageId = Object.keys(pages)[0];
-    console.log("Page id : " + pageId)
-    if (pageId !== '-1') {
-      const introduction = pages[pageId].extract;
-      console.log('Introduction de la page Wikipedia :', introduction);
-      return introduction;
-    } else {
-      console.log('Page non trouvée.');
-      return null;
-    }
-  } catch (error) {
-    console.error('Erreur lors de la récupération de l\'introduction :', error.message);
-    return null;
-  }
+const data = await response.json();
+const pages = data.query.pages;
+console.log(data);
+const pageId = Object.keys(pages)[0];
+console.log("Page id : " + pageId)
+if (pageId !== '-1') {
+  const introduction = pages[pageId].extract;
+  console.log('Introduction de la page Wikipedia :', introduction);
+  return introduction;
+} else {
+  console.log('Page non trouvée.');
+  return null;
+}
+} catch (error) {
+console.error('Erreur lors de la récupération de l\'introduction :', error.message);
+return null;
+}
 }
 
 window.onload = async function () {
-  rechercher();
-  var islandDescription = document.getElementById("description-ile");
-  let nomPage = await findWikipediaPage(getParameter("ile"));
-  islandDescription.innerHTML = await fetchWikipediaIntroduction(nomPage)
+console.log("oui uo");
+rechercher();    
+var islandDescription = document.getElementById("description-ile");
+let nomPage = await findWikipediaPage(getParameter("name"));
+islandDescription.innerHTML = await fetchWikipediaIntroduction(nomPage)
 };
