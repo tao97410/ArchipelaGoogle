@@ -111,7 +111,7 @@ SELECT DISTINCT ?Page ?Name ?Desc ?Area ?Population ?Coordinates ?Archipelago ?S
                   
         });
         let jsonDataFinal = JSON.stringify(dataFinal);
-        console.log(JSON.parse(jsonDataFinal));
+        //console.log(JSON.parse(jsonDataFinal));
 
         setPage(JSON.parse(jsonDataFinal));
 
@@ -144,7 +144,7 @@ function setPage(information) {
 
 
 
-        console.log(information.Name);
+        //console.log(information.Name);
         
         nomIle_html.innerHTML=information.Name;
 
@@ -285,12 +285,9 @@ function GoToPage(name,type){
     document.location.href = url;
 }
 
-window.onload = function () {
-    rechercher();
-  };
-
 async function findWikipediaPage(title) {
-  title = "Île " + title
+  //title = "Île " + title;
+  console.log("Titre pour la recherche wikipedia : ", title);
   try {
     const response = await fetch('https://fr.wikipedia.org/w/api.php?' +
       new URLSearchParams({
@@ -299,7 +296,7 @@ async function findWikipediaPage(title) {
         list: 'search',
         origin: '*',
         srsearch: title,
-        srnamespace: 0, // Limite la recherche aux articles
+        srnamespace: 100, // Limite la recherche aux articles
       })
     );
 
@@ -309,8 +306,7 @@ async function findWikipediaPage(title) {
     if (searchResults.length > 0) {
       const firstResult = searchResults[0];
       const pageTitle = firstResult.title;
-      console.log('Titre de la page Wikipedia :', pageTitle);
-      console.log(pageTitle)
+      console.log('Titre de la page Wikipedia trouvée:', pageTitle);
       return pageTitle;
     } else {
       console.log('Aucun résultat trouvé pour la recherche.');
@@ -340,13 +336,11 @@ async function fetchWikipediaIntroduction(pageTitle) {
 
     const data = await response.json();
     const pages = data.query.pages;
-    console.log(data);
     const pageId = Object.keys(pages)[0];
-    console.log("Page id : " + pageId)
     if (pageId !== '-1') {
       const introduction = pages[pageId].extract;
-      //console.log('Introduction de la page Wikipedia :', introduction);
-      //return introduction;
+      // console.log('Introduction de la page Wikipedia :', introduction);
+      return introduction;
     } else {
       console.log('Page non trouvée.');
       return null;
@@ -357,8 +351,41 @@ async function fetchWikipediaIntroduction(pageTitle) {
   }
 }
 
+function nettoyerNomIle(nom) {
+  // Convertir en minuscules
+  nom = nom.toLowerCase();
+  
+  // Supprimer les caractères spéciaux et accents
+  nom = nom.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+  // Supprimer les mots spécifiques
+  nom = nom.replace(/\b(islands|island|isla|islets)\b/g, '');
+
+  // Supprimer les déterminants
+  nom = nom.replace(/\b(le|la|les|du|de)\b/g, '');
+
+ // Remplacer les doubles espaces par un seul espace
+ nom = nom.replace(/\s+/g, ' ');
+
+ // Supprimer les espaces en début et fin de chaîne
+ nom = nom.trim();
+
+  // Supprimer les espaces et caractères non alphabétiques
+  //nom = nom.replace(/[^a-zA-Z]/g, '');
+
+  return nom;
+}
+
+// Exemples d'utilisation
+
+
+
 window.onload = async function () {
+  console.log(nettoyerNomIle("Île de la Réunionle")); // Output: reunion
+  console.log(nettoyerNomIle("Java islands")); // Output: java
   var islandDescription = document.getElementById("description-ile");
-  let nomPage = await findWikipediaPage("Groenland");
+  let nomIle = getParameter("ile");
+  let nomPage = await findWikipediaPage(nomIle);
   islandDescription.innerHTML = await fetchWikipediaIntroduction(nomPage)
+  rechercher();
 };
