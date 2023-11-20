@@ -66,8 +66,8 @@ h1{
     background-color: #ec5930d0; /* Couleur de fond orange */
     border-radius: 10px; /* Bords arrondis */
     padding: 20px; /* Espace intérieur du conteneur */
-    margin-bottom: 15px;
-    margin-top: 15px;
+    margin-bottom: 1rem;
+    margin-top: 2rem;
     border-color: rgb(44, 43, 43);
     border-width: 2px;
 }

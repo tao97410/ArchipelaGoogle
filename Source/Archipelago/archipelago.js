@@ -165,10 +165,8 @@ function setPage(information) {
     // Remove elements that are not in the resultDictionary
     function removeUnusedElements(elements) {
       for (var i = elements.length - 1; i >= 0; i--) {
-        if (!isInDictionary(elements[i]) && (elements[i].tagName !="img" ||elements[i].tagName !="div" ) )
+        if (!isInDictionary(elements[i]))
           elements[i].remove();
-        else if(elements[i].tagName =="img" || elements[i].tagName =="div")
-          elements[i].parentNode.parentNode.remove();
       }
     }
 
