@@ -290,7 +290,7 @@ async function findWikipediaPage(title) {
         list: 'search',
         origin: '*',
         srsearch: title,
-        srnamespace: 100, // Limite la recherche aux articles
+        srnamespace: 0, // Limite la recherche aux articles
       })
     );
 
@@ -336,7 +336,7 @@ async function fetchWikipediaIntroduction(pageTitle, compteur) {
     
     let estPresent = false;
     pages[pageId].categories.forEach(c => {
-      if(c.title == "Catégorie:Portail:Îles/Articles liés" || c.title=="Catégorie:Portail:Îles"){
+      if(c.title == "Catégorie:Portail:Îles/Articles liés" || c.title=="Catégorie:Portail:Maritime/Articles liés"){
         estPresent = true;
       }
     });
@@ -346,7 +346,7 @@ async function fetchWikipediaIntroduction(pageTitle, compteur) {
       if (pageId !== '-1') {
         const introduction = pages[pageId].extract;
         console.log('Introduction de la page Wikipedia :', introduction);
-        return introduction;
+        return introduction + "\n    <i>(informations provenant de wikipédia)</i>";
       } else {
         console.log('Page non trouvée.');
         return null;

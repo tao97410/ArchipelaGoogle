@@ -320,7 +320,6 @@ async function findWikipediaPage(title) {
       const firstResult = searchResults[0];
       const pageTitle = firstResult.title;
       console.log('Titre de la page Wikipedia :', pageTitle);
-      console.log(pageTitle)
       return pageTitle;
     } else {
       console.log('Aucun résultat trouvé pour la recherche.');
@@ -356,7 +355,7 @@ async function fetchWikipediaIntroduction(pageTitle) {
     if (pageId !== '-1') {
       const introduction = pages[pageId].extract;
       console.log('Introduction de la page Wikipedia :', introduction);
-      return introduction;
+      return introduction + "\n    <i>(informations provenant de wikipédia)</i>";
     } else {
       console.log('Page non trouvée.');
       return null;
@@ -370,7 +369,7 @@ async function fetchWikipediaIntroduction(pageTitle) {
 window.onload = async function () {
     
   rechercher();
-  var islandDescription = document.getElementById("description-ile");
+  var islandDescription = document.getElementById("description-pays");
   let nomPage = await findWikipediaPage(getParameter("name"));
   islandDescription.innerHTML = await fetchWikipediaIntroduction(nomPage)
 };
