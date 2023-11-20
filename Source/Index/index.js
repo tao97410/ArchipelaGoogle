@@ -56,7 +56,6 @@ function rechercherSuggestions() {
                 const data = await response.json();
                 const islandSuggestions = data.results.bindings.map((binding) => binding.Name.value);
                 addOptionsToDatalist(islandSuggestions);
-                console.log("Name suggestions found and added to datalist!");
             } else {
                 console.error('Erreur récuperation des données :', response.statusText);
             }

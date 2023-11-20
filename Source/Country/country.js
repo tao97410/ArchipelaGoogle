@@ -71,10 +71,8 @@ SELECT DISTINCT ?Name ?Description ?Image ?Official ?Demonym ?Languages ?Motto ?
   // Fonction pour effectuer la requête SPARQL
   async function queryWikidata() {
     try {
-        console.log("before sparql");
       const response = await fetch(sparqlUrl);
       if (response.ok) {
-        console.log("response is ok");
         const data = await response.json();
         let dataFinal = {};         
         document.getElementById("loading").style.display = "none";      
@@ -130,7 +128,6 @@ SELECT DISTINCT ?Name ?Description ?Image ?Official ?Demonym ?Languages ?Motto ?
                   
         });
         let jsonDataFinal = JSON.stringify(dataFinal);
-        console.log(JSON.parse(jsonDataFinal));
 
         setPage(JSON.parse(jsonDataFinal));
 
@@ -163,7 +160,7 @@ function setPage(information) {
 
     }
   }
-  console.log(dictionnaireHTML); 
+
     
     
   for (var key in dictionnaireHTML) {
@@ -273,11 +270,8 @@ async function findWikipediaPage(title) {
     if (searchResults.length > 0) {
       const firstResult = searchResults[0];
       const pageTitle = firstResult.title;
-      console.log('Titre de la page Wikipedia :', pageTitle);
-      console.log(pageTitle)
       return pageTitle;
     } else {
-      console.log('Aucun résultat trouvé pour la recherche.');
       return null;
     }
   } catch (error) {
@@ -304,15 +298,11 @@ async function fetchWikipediaIntroduction(pageTitle) {
 
     const data = await response.json();
     const pages = data.query.pages;
-    console.log(data);
     const pageId = Object.keys(pages)[0];
-    console.log("Page id : " + pageId)
     if (pageId !== '-1') {
       const introduction = pages[pageId].extract;
-      console.log('Introduction de la page Wikipedia :', introduction);
       return introduction;
     } else {
-      console.log('Page non trouvée.');
       return null;
     }
   } catch (error) {

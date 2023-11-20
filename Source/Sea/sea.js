@@ -60,7 +60,6 @@ function rechercher() {
   const sparqlUrl = endpointUrl + "?query=" + encodeURIComponent(sparqlQuery) + "&format=json";
 
   // Fonction pour effectuer la requête SPARQL
-  console.log("avant req");
   async function queryWikidata() {
     try {
       const response = await fetch(sparqlUrl);
@@ -84,9 +83,7 @@ function rechercher() {
                   
         });
         let jsonDataFinal = JSON.stringify(dataFinal);
-        console.log(JSON.parse(jsonDataFinal));
 
-        //console.log(JSON.parse(jsonDataFinal));
         setPage(JSON.parse(jsonDataFinal));
 
       } else {
@@ -205,7 +202,6 @@ function setPage(information) {
               GoToPage(name,"Country");
           });
       }
-      console.log(dictionnaireHTML);
         
 }
 
@@ -236,11 +232,8 @@ async function findWikipediaPage(title) {
     if (searchResults.length > 0) {
       const firstResult = searchResults[0];
       const pageTitle = firstResult.title;
-      console.log('Titre de la page Wikipedia :', pageTitle);
-      console.log(pageTitle)
       return pageTitle;
     } else {
-      console.log('Aucun résultat trouvé pour la recherche.');
       return null;
     }
   } catch (error) {
@@ -267,15 +260,11 @@ async function fetchWikipediaIntroduction(pageTitle) {
 
     const data = await response.json();
     const pages = data.query.pages;
-    console.log(data);
     const pageId = Object.keys(pages)[0];
-    console.log("Page id : " + pageId)
     if (pageId !== '-1') {
       const introduction = pages[pageId].extract;
-      console.log('Introduction de la page Wikipedia :', introduction);
       return introduction;
     } else {
-      console.log('Page non trouvée.');
       return null;
     }
   } catch (error) {
@@ -285,7 +274,6 @@ async function fetchWikipediaIntroduction(pageTitle) {
 }
 
 window.onload = async function () {
-    console.log("oui uo");
     rechercher();    
     var islandDescription = document.getElementById("description-ile");
     let nomPage = await findWikipediaPage(getParameter("name"));

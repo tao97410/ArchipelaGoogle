@@ -41,7 +41,6 @@ function rechercher() {
   const sparqlUrl = endpointUrl + "?query=" + encodeURIComponent(sparqlQuery) + "&format=json";
 
   // Fonction pour effectuer la requête SPARQL
-  console.log("pre requete")
   async function queryWikidata() {
     try {
       const response = await fetch(sparqlUrl);
@@ -67,7 +66,6 @@ function rechercher() {
                   
         });
         let jsonDataFinal = JSON.stringify(dataFinal);
-        console.log(JSON.parse(jsonDataFinal));
         setPage(JSON.parse(jsonDataFinal));
       } else {
         console.error('Erreur lors de la requête SPARQL :', response.statusText);
@@ -180,16 +178,22 @@ function setPage(information) {
     removeUnusedElements(imageElements);
 
   var countries = dictionnaireHTML["Countries"][1].children;
+  var seas = dictionnaireHTML["Seas"][1].children;
 
-  for (var i = 0; i < countries.length; i++) {
-      countries[i].addEventListener('click', function(event) {
+  function addEventListenertoChildren(children,type){
+    for (var i = 0; i < children.length; i++) {
+      children[i].addEventListener('click', function(event) {
           // Call the GoToPage function with the 'id' attribute as the parameter
           var name = event.currentTarget.name;
-          GoToPage(name,"Country");
+          GoToPage(name,type);
       });
+    }
   }
-  console.log(dictionnaireHTML);
-    
+
+  addEventListenertoChildren(countries,"Country");
+  addEventListenertoChildren(seas,"Sea");
+
+  
 }
 
 function GoToPage(name,type){
@@ -219,11 +223,8 @@ const searchResults = data.query.search;
 if (searchResults.length > 0) {
   const firstResult = searchResults[0];
   const pageTitle = firstResult.title;
-  console.log('Titre de la page Wikipedia :', pageTitle);
-  console.log(pageTitle)
   return pageTitle;
 } else {
-  console.log('Aucun résultat trouvé pour la recherche.');
   return null;
 }
 } catch (error) {
@@ -250,15 +251,11 @@ const response = await fetch(`https://fr.wikipedia.org/w/api.php?` +
 
 const data = await response.json();
 const pages = data.query.pages;
-console.log(data);
 const pageId = Object.keys(pages)[0];
-console.log("Page id : " + pageId)
 if (pageId !== '-1') {
   const introduction = pages[pageId].extract;
-  console.log('Introduction de la page Wikipedia :', introduction);
   return introduction;
 } else {
-  console.log('Page non trouvée.');
   return null;
 }
 } catch (error) {
@@ -268,7 +265,6 @@ return null;
 }
 
 window.onload = async function () {
-console.log("oui uo");
 rechercher();    
 var islandDescription = document.getElementById("description-ile");
 let nomPage = await findWikipediaPage(getParameter("name"));

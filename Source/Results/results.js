@@ -6,7 +6,6 @@ function getParameter(name) {
 function rechercher() {
   document.getElementById("loading").style.display = "block";
 
-  console.log("appel à la fonction rechercher");
   // Requête SPARQL à exécuter
   const sparqlQuery = `#defaultView:Table
 SELECT DISTINCT ?Page ?Name

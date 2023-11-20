@@ -116,7 +116,6 @@ SELECT DISTINCT ?Page ?Name ?Desc ?Area ?Population ?Coordinates ?Archipelago ?S
 
         });
         let jsonDataFinal = JSON.stringify(dataFinal);
-        console.log(JSON.parse(jsonDataFinal));
 
         setPage(JSON.parse(jsonDataFinal));
 
@@ -160,7 +159,6 @@ function setPage(information) {
 
 
 
-        console.log(information.Name);
         
         nomIle_html.innerHTML=information.Name;
 
@@ -343,11 +341,8 @@ async function findWikipediaPage(title) {
     if (searchResults.length > 0) {
       const firstResult = searchResults[0];
       const pageTitle = firstResult.title;
-      console.log('Titre de la page Wikipedia :', searchResults);
-      console.log(pageTitle)
       return pageTitle;
     } else {
-      console.log('Aucun résultat trouvé pour la recherche.');
       return null;
     }
   } catch (error) {
@@ -385,14 +380,10 @@ async function fetchWikipediaIntroduction(pageTitle, compteur) {
       }
     });
     if(estPresent){
-      console.log(data);
-      console.log("Page id : " + pageId)
       if (pageId !== '-1') {
         const introduction = pages[pageId].extract;
-        console.log('Introduction de la page Wikipedia :', introduction);
         return introduction;
       } else {
-        console.log('Page non trouvée.');
         return null;
       }
     }else{
