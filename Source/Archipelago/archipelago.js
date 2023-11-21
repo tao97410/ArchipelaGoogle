@@ -84,7 +84,7 @@ function setPage(information) {
 
   // Iterate through the keys in the JSON object
   for (var key in information) {
-    if (information.hasOwnProperty(key)) {
+    if (information.hasOwnProperty(key) && information[key][0]) {
       // Construct the element IDs based on the current key
       var libelleId = "Libelle_" + key;
       var contentId = "Content_" + key;
@@ -98,7 +98,6 @@ function setPage(information) {
 
     }
   }
-
   dictionnaireHTML["Official"]=["Libelle_Official","Content_Official"]
   var nomOfficiel=document.getElementById('Content_Official');
   nomOfficiel.innerHTML=information.Name;
@@ -168,7 +167,7 @@ function setPage(information) {
     function removeUnusedElements(elements) {
       for (var i = elements.length - 1; i >= 0; i--) {
         if (!isInDictionary(elements[i]))
-          elements[i].remove();
+          elements[i].parentNode.parentNode.remove();
       }
     }
 
@@ -177,7 +176,11 @@ function setPage(information) {
     removeUnusedElements(contenuElements);
     removeUnusedElements(imageElements);
 
-  var countries = dictionnaireHTML["Countries"][1].children;
+
+
+  if(dictionnaireHTML["Countries"])
+    var countries = dictionnaireHTML["Countries"][1].children;
+  if(dictionnaireHTML["Seas"])
   var seas = dictionnaireHTML["Seas"][1].children;
 
   function addEventListenertoChildren(children,type){
@@ -189,9 +192,11 @@ function setPage(information) {
       });
     }
   }
+  if(countries)
+    addEventListenertoChildren(countries,"Country");
+  if(seas)
+    addEventListenertoChildren(seas,"Sea");
 
-  addEventListenertoChildren(countries,"Country");
-  addEventListenertoChildren(seas,"Sea");
 
   
 }
