@@ -29,6 +29,7 @@ function rechercher() {
       OPTIONAL {?Page wdt:P2049 ?Width.}
       OPTIONAL {?Page wdt:P17 ?CountriesId.
         ?CountriesId rdfs:label ?Countries.
+        ?CountriesId (wdt:P31/wdt:P279*) wd:6256.
         FILTER(lang(?Countries) = 'fr')}
       OPTIONAL{?Page wdt:P18 ?Image}}
       UNION
@@ -213,13 +214,13 @@ function GoToPage(name,type){
 
 
 async function findWikipediaPage(title) {
-  
   try {
     const response = await fetch('https://fr.wikipedia.org/w/api.php?' +
       new URLSearchParams({
         action: 'query',
         format: 'json',
         list: 'search',
+        disambiguation: 'false',
         origin: '*',
         srsearch: title,
         srnamespace: 0, // Limite la recherche aux articles
@@ -227,7 +228,7 @@ async function findWikipediaPage(title) {
     );
 
     const data = await response.json();
-    const searchResults = data.query.search;
+    searchResults = data.query.search;
 
     if (searchResults.length > 0) {
       const firstResult = searchResults[0];
@@ -242,14 +243,15 @@ async function findWikipediaPage(title) {
   }
 }
 
-async function fetchWikipediaIntroduction(pageTitle) {
+async function fetchWikipediaIntroduction(pageTitle, compteur) {
   try {
     const response = await fetch(`https://fr.wikipedia.org/w/api.php?` +
       new URLSearchParams({
         action: 'query',
         format: 'json',
-        prop: 'extracts',
+        prop: 'extracts|categories',
         titles: pageTitle,
+        cllimit:'100',
         origin: '*',
         exintro: true,
       }), {
@@ -261,21 +263,40 @@ async function fetchWikipediaIntroduction(pageTitle) {
     const data = await response.json();
     const pages = data.query.pages;
     const pageId = Object.keys(pages)[0];
-    if (pageId !== '-1') {
-      const introduction = pages[pageId].extract;
-      return introduction + "\n    <i>(informations provenant de wikipédia)</i>";
-    } else {
-      return null;
+   
+    
+    let estPresent = false;
+    pages[pageId].categories.forEach(c => {
+      if(c.title=="Catégorie:Portail:Maritime/Articles liés"){
+        estPresent = true;
+      }
+    });
+    if(estPresent){
+      if (pageId !== '-1') {
+        const introduction = pages[pageId].extract;
+       
+        return introduction + "\n    <i>(informations provenant de wikipédia)</i>";
+      } else {
+        return null;
+      }
+    }else{
+      if(compteur>=3 || searchResults.length == compteur ){
+        return "Pas d'article associés sur Wikipedia";
+      }else{
+        compteur++;
+        return fetchWikipediaIntroduction(searchResults[compteur].title, compteur);    
+      }
     }
   } catch (error) {
     console.error('Erreur lors de la récupération de l\'introduction :', error.message);
     return null;
-  }
+  }  
+       
 }
 
 window.onload = async function () {
     rechercher();    
     var islandDescription = document.getElementById("description-ile");
     let nomPage = await findWikipediaPage(getParameter("name"));
-    islandDescription.innerHTML = await fetchWikipediaIntroduction(nomPage)
+    islandDescription.innerHTML = await fetchWikipediaIntroduction(nomPage,0)
 };

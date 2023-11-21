@@ -36,6 +36,7 @@ function rechercher() {
                 FILTER(lang(?Seas) = 'fr')}
       OPTIONAL {?Page wdt:P17 ?CountriesId.
         ?CountriesId rdfs:label ?Countries.
+        ?CountriesId (wdt:P31/wdt:P279*) wd:6256.
         FILTER(lang(?Countries) = 'fr')}
       OPTIONAL{?Page wdt:P18 ?Image}
       OPTIONAL{?Page wdt:P131 ?region.
@@ -330,6 +331,7 @@ async function findWikipediaPage(title) {
         action: 'query',
         format: 'json',
         list: 'search',
+        disambiguation: 'false',
         origin: '*',
         srsearch: title,
         srnamespace: 0, // Limite la recherche aux articles

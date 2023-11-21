@@ -29,6 +29,7 @@ function rechercher() {
                 FILTER(lang(?Seas) = 'fr')}
       OPTIONAL {?Page wdt:P17 ?CountriesId.
         ?CountriesId rdfs:label ?Countries.
+        ?CountriesId (wdt:P31/wdt:P279*) wd:6256.
         FILTER(lang(?Countries) = 'fr')}
       OPTIONAL{?Page wdt:P18 ?Image}
     }
