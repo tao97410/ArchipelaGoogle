@@ -317,7 +317,7 @@ async function fetchWikipediaIntroduction(pageTitle) {
 window.onload = async function () {
     
   rechercher();
-  var islandDescription = document.getElementById("description-pays");
+  var islandDescription = document.getElementById("description-ile");
   let nomPage = await findWikipediaPage(getParameter("name"));
   islandDescription.innerHTML = await fetchWikipediaIntroduction(nomPage)
 };
