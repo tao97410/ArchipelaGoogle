@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="island.css" />     
+    <link rel="stylesheet" type="text/css" href="../PageStyling/page.css" />     
     <!-- Include Tailwind CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
     <title>Island</title>
@@ -14,10 +14,6 @@
   
 
 </head>
-
-
-
-
 
 <body>
 
@@ -39,12 +35,15 @@
                     <h1 id="Content_NomIle"> </h1>
                 </li>
 
+                <li id="li_loading">
+                    <div id="loading" class="loading shadow-2xl"></div>
+                </li>
                 <li>
                     <div class="div_images" id="images">
                         <img class="carteIle" src="" alt="Drapeau de l'ile" id="Flag">
                         <img class="carteIle" src="" alt="Image de l'ile" id="Image">
                     </div>
-                    <!-- <img  class="carteIle" src="../../assets/Reunion.jpg" alt=""> -->
+                    
                 </li>
 
                 <li>
@@ -55,21 +54,20 @@
 
                 <li>
                     <div class="div_section">
-                        <p class="libelle"> Statut</p>
+                        <p class="libelle" id="Libelle_Statut"> Statut</p>
                         <p class="contenu" id="Content_Statut"></p>
                     </div>
                 </li>
                 <li>
                     <div class="div_section">
-                            <p class="libelle">Pays</p>
+                            <p class="libelle" id="Libelle_Countries">Pays</p>
                             <div class="contenu" id="Content_Countries">
-    
                             </div>
                     </div> 
                 </li>
                 <li>
                     <div class="div_section">
-                            <p class="libelle">Chef administratif</p>
+                            <p class="libelle" id="Libelle_ChefAdministratif">Chef administratif</p>
                             <p class="contenu" id="Content_ChefAdministratif"></p>
                     </div> 
                 </li>
@@ -80,21 +78,21 @@
                 </li>
                 <li>
                     <div class="div_section">
-                        <p class="libelle"> Gentilé</p>
+                        <p class="libelle" id="Libelle_Gentile"> Gentilé</p>
                         <p class="contenu" id="Content_Gentile"></p>
                     </div>
                 
                 </li>
                 <li>
                     <div class="div_section">
-                        <p class="libelle"> Langue(s) officielle(s)</p>
+                        <p class="libelle" id="Libelle_Langues"> Langue(s) officielle(s)</p>
                         <p class="contenu" id="Content_Langues"> </p>
                     </div>
                 
                 </li>
                 <li>
                     <div class="div_section">
-                        <p class="libelle"> Nombre d'habitants</p>
+                        <p class="libelle" id="Libelle_Population"> Nombre d'habitants</p>
                         <p class="contenu" id="Content_Population"></p>
                     </div>
                 
@@ -108,28 +106,28 @@
 
                 <li>
                     <div class="div_section">
-                        <p class="libelle"> Superficie</p>
+                        <p class="libelle" id="Libelle_Area"> Superficie</p>
                         <p class="contenu" id="Content_Area"></p>
                     </div>
                 
                 </li>
                 <li>
                     <div class="div_section">
-                        <p class="libelle"> Coordonnées</p>
-                        <p class="contenu" id="Content_Coordonates"></p>
+                        <p class="libelle" id="Libelle_Coordinates"> Coordonnées</p>
+                        <p class="contenu" id="Content_Coordinates"></p>
                     </div>
                 
                 </li>
                 <li>
                     <div class="div_section">
-                        <p class="libelle">Archipel</p>
+                        <p class="libelle" id="Libelle_Archipel">Archipel</p>
                         <a class="contenu_cliquable" id= "Content_Archipel"></a>
                     </div>
                 </li>
                 <li>
                     <div class="div_section">
-                        <p class="libelle">Mers</p>
-                        <div class="contenu" id="Content_Seas">
+                        <p class="libelle" id="Libelle_Seas">Mers</p>
+                        <div class="contenu_cliquable" id="Content_Seas">
 
                         </div>
                     </div>

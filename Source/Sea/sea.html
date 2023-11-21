@@ -1,12 +1,120 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="./sea.js"> </script>
+    <link rel="stylesheet" type="text/css" href="../PageStyling/page.css" />     
+    <!-- Include Tailwind CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
     <title>Sea</title>
+
+  
+
 </head>
+
+
+
+
+
 <body>
-    <h1>Sea</h1>
+
+    <header class="header">
+        <ul class="header_motor">
+            <li><a href="../Index/index.html"> <img  class="logo" src="../../assets/logo.png" alt="logoMoteurRecherche"></a></li>
+            <li class="" id="Archipel"><a href="../Index/index.html"><span>Archipel </span></a></li>
+            <li class="maclass" > <p> Tous les voyages débutent par une recherche</p></li>
+        </ul>
+    
+    
+    </header>
+
+    <main>
+        <div class="cadreInfos">
+            <ul>
+
+                <li>
+                    <h1  id="Content_Name"> </h1>
+                </li>
+
+                <li id="li_loading">
+                    <div id="loading" class="loading shadow-2xl"></div>
+                </li>
+                <li>
+                    <div class="div_images" id="images">
+                        <img class="carteIle" src="" alt="Image de la mer" id="Content_Image">
+                    </div>
+                    
+                </li>
+
+                <li>
+                    <div class="div_cadreInfos "id="administration">
+                        <h3 >Informations</h3>
+                    </div>
+                </li>
+
+                <li>
+                    <div class="div_section">
+                        <p class="libelle" id="Libelle_Desc"> Statut</p>
+                        <p class="contenu" id="Content_Desc"></p>
+                    </div>
+                </li>
+                
+
+                <li>
+                    <div class="div_section">
+                        <p class="libelle" id="Libelle_Area"> Superficie</p>
+                        <p class="contenu" id="Content_Area">km²</p>
+                        
+                    </div>
+                
+                </li>
+                <li>
+                    <div class="div_section">
+                        <p class="libelle" id="Libelle_Depth"> Profondeur moyenne</p>
+                        <p class="contenu" id="Content_Depth">m</p>
+                        
+                    </div>
+                
+                </li>
+                <li>
+                    <div class="div_section">
+                        <p class="libelle" id="Libelle_Width">Largeur</p>
+                        <p class="contenu" id= "Content_Width">km</p>
+                       
+                    </div>
+                </li>
+                <li>
+                    <div class="div_section">
+                        <p class="libelle" id="Libelle_Lowest">Profondeur maximum</p>
+                        <p class="contenu" id="Content_Lowest">m</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="div_section">
+                        <p class="libelle" id="Libelle_Countries">Pays</p>
+                        <div class="contenu_cliquable" id="Content_Countries">
+
+                        </div>
+                    </div>
+                </li>
+               
+                
+
+                
+            </ul>
+        </div>
+    
+        <div id="description-ile" class="main">
+        </div>
+    </main>
+   
+
+    
+
 </body>
+<script src="./sea.js"> </script>
+
 </html>

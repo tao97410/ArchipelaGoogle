@@ -1,12 +1,106 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="./archipelago.js"></script>
-    <title>Archipelago</title>
+    <link rel="stylesheet" type="text/css" href="../PageStyling/page.css" />     
+    <!-- Include Tailwind CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <title>Archipel</title>
+
+  
+
 </head>
+
+
+
+
+
 <body>
-   <h1>Archipel</h1> 
+
+    <header class="header">
+        <ul class="header_motor">
+            <li><a href="../Index/index.html"> <img  class="logo" src="../../assets/logo.png" alt="logoMoteurRecherche"></a></li>
+            <li class="" id="Archipel"><a href="../Index/index.html"><span>Archipel </span></a></li>
+            <li class="maclass" > <p> Tous les voyages débutent par une recherche</p></li>
+        </ul>
+    
+    
+    </header>
+
+    <main>
+        <div class="cadreInfos">
+            <ul>    
+                <li>
+                    <h1 id="Content_Name"> </h1>
+                </li>
+
+                <li id="li_loading">
+                    <div id="loading" class="loading shadow-2xl"></div>
+                </li>
+                <li>
+                    <div class="div_images" id="images">
+                        <img class="carteIle" src="" alt="Image de l'ile" id="Content_Image">
+                    </div>
+                </li>
+
+                <li>
+                    <div class="div_cadreInfos "id="administration">
+                        <h3 >Administration</h3>
+                    </div>
+                </li>
+                <li>
+                    <div class="div_section">
+                        <p class="libelle" id="Libelle_Official"> Nom officiel</p>
+                        <p class="contenu" id="Content_Official"></p>
+                    </div>
+                </li>
+                <li>
+                    <div class="div_section">
+                            <p class="libelle" id="Libelle_Countries">Pays</p>
+                            <div class="contenu_cliquable" id="Content_Countries">
+                            </div>
+                    </div> 
+                </li>
+                <li>
+                    <div class="div_cadreInfos "id="administration">
+                        <h3 >Géographie</h3>
+                    </div>
+                </li>
+         
+                <li>
+                    <div class="div_section">
+                        <p class="libelle" id="Libelle_Area"> Superficie</p>
+                        <p class="contenu" id="Content_Area">km²</p>
+                    </div>
+                
+                </li>
+                <li>
+                    <div class="div_section">
+                        <p class="libelle" id="Libelle_Seas">Mers</p>
+                        <div class="contenu_cliquable" id="Content_Seas">
+
+                        </div>
+                    </div>
+                </li>
+               
+                
+
+                
+            </ul>
+        </div>
+    
+        <div id="description-ile" class="main">
+        </div>
+    </main>
+   
+
+    
+
 </body>
+<script src="./archipelago.js   "> </script>
+
 </html>

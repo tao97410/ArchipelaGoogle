@@ -8,6 +8,8 @@ function getParameter(name) {
 }
 
 function rechercher() {
+  document.getElementById("loading").style.display = "block";
+  document.getElementById("images").style.visibility="hidden";
   // Requête SPARQL à exécuter
   const sparqlQuery = `#defaultView:Table
 SELECT DISTINCT ?Page ?Name ?Desc ?Area ?Population ?Coordinates ?Archipelago ?Seas ?Countries ?Image ?Demonym ?Languages ?Flags ?Government
@@ -61,7 +63,9 @@ SELECT DISTINCT ?Page ?Name ?Desc ?Area ?Population ?Coordinates ?Archipelago ?S
       const response = await fetch(sparqlUrl);
       if (response.ok) {
         const data = await response.json();
-        let dataFinal = {};          
+        let dataFinal = {};    
+        document.getElementById("loading").style.display = "none";      
+        document.getElementById("images").style.visibility="visible";
         dataFinal.Name = data.results.bindings[0].Name.value;
         dataFinal.Desc = data.results.bindings[0].Desc?.value;
         dataFinal.Area = data.results.bindings[0]?.Area?.value;
@@ -109,10 +113,9 @@ SELECT DISTINCT ?Page ?Name ?Desc ?Area ?Population ?Coordinates ?Archipelago ?S
             dataFinal.Countries.push(r?.Countries?.value);
 
           }
-                  
+
         });
         let jsonDataFinal = JSON.stringify(dataFinal);
-        //console.log(JSON.parse(jsonDataFinal));
 
         setPage(JSON.parse(jsonDataFinal));
 
@@ -129,98 +132,128 @@ SELECT DISTINCT ?Page ?Name ?Desc ?Area ?Population ?Coordinates ?Archipelago ?S
 function setPage(information) {
         var tbody=document.getElementsByTagName("tbody");
         var nomIle_html=document.getElementById('Content_NomIle');
-        var statut_html=document.getElementById('Content_Statut');
-        var area_html = document.getElementById('Content_Area');
-        var population_html = document.getElementById('Content_Population');
-        var coordonates_html = document.getElementById('Content_Coordonates');
 
+        var statut_html = document.getElementById('Content_Statut');
+        const libelle_Statut = document.getElementById('Libelle_Statut');
+
+        var area_html = document.getElementById('Content_Area');
+        const libelle_Area = document.getElementById('Libelle_Area')
+        var population_html = document.getElementById('Content_Population');
+        const libelle_Population = document.getElementById('Libelle_Population');
+        var coordinates_html = document.getElementById('Content_Coordinates');
+        const libelle_Coordinates = document.getElementById('Libelle_Coordinates');
         var archipel_html = document.getElementById('Content_Archipel');
+        const libelle_Archipel = document.getElementById('Libelle_Archipel');
         var mer_html = document.getElementById('Content_Seas');
+        const libelle_Seas = document.getElementById('Libelle_Seas');
         var pays_html = document.getElementById('Content_Countries');
-        var gentile_html=  document.getElementById('Content_Gentile');
-        var langues_html=  document.getElementById('Content_Langues');
-        var chefAdministratif_html=  document.getElementById('Content_ChefAdministratif');
-        var images_html= document.getElementById('images');
+        const libelle_Countries = document.getElementById('Libelle_Countries');
+        var gentile_html =  document.getElementById('Content_Gentile');
+        const Libelle_Gentile = document.getElementById('Libelle_Gentile');
+        var langues_html =  document.getElementById('Content_Langues');
+        const libelle_Langues = document.getElementById('Libelle_Langues');
+        var chefAdministratif_html =  document.getElementById('Content_ChefAdministratif');
+        const Libelle_ChefAdministratif = document.getElementById('Libelle_ChefAdministratif');
+        
         
 
 
 
-        //console.log(information.Name);
         
         nomIle_html.innerHTML=information.Name;
 
         if (information.Desc)
-            statut_html.innerHTML=information.Desc;
+          statut_html.innerHTML=information.Desc;
+        else{
+          libelle_Statut.parentNode.parentNode.remove();
+        }
+            
         if (information.Area)
             area_html.innerHTML = information.Area+"km²";
+        else
+            libelle_Area.parentNode.parentNode.remove();
         if (information.Population)
-            population_html.innerHTML = information.Population;
+          population_html.innerHTML = information.Population;
+        else
+            libelle_Population.parentNode.parentNode.remove();
         if (information.Coordinates)
-            coordonates_html.innerHTML="Lat "+information.Coordinates.latitude + "° ; Long " + information.Coordinates.longitude+"°"; 
+            coordinates_html.innerHTML="Lat "+information.Coordinates.latitude + "° </br> Long " + information.Coordinates.longitude+"°"; 
+        else
+            libelle_Coordinates.parentNode.parentNode.remove();
+          
 
-
+       
         
         if (information.Archipelago)
         {
             archipel_html.innerHTML = information.Archipelago;
             archipel_html.setAttribute('Name',information.Archipelago);
         }
+        else 
+            libelle_Archipel.parentNode.parentNode.remove();
 
         // Extract names from each sea element and push them into the seaNames array
-        if(information.Seas)
+        if(information.Seas[0])
         {
-            var seasLength = information.Seas.length;
+        var seasLength = information.Seas.length;
 
-            information.Seas.forEach((seaElement, index) => {
-                var newElem = document.createElement('a');
-                newElem.className = "contenu_cliquable";
-                newElem.setAttribute('Name',seaElement);
-                newElem.innerHTML = seaElement;
-            
-                // Ajoutez une virgule si ce n'est pas le dernier élément
-                if (index < seasLength - 1) {
+        information.Seas.forEach((seaElement, index) => {
+            var newElem = document.createElement('a');
+            newElem.setAttribute('Name',seaElement);
+            newElem.innerHTML = seaElement;
+        
+            // Ajoutez une virgule si ce n'est pas le dernier élément
+            if (index < seasLength - 1) {
                     newElem.innerHTML += "<br>";
-                }
-            
-                mer_html.appendChild(newElem);
-            });
+            }
+        
+            mer_html.appendChild(newElem);
+        });
         }
+        else 
+            libelle_Seas.parentNode.parentNode.remove();
 
         // Join the seaNames array with commas to create a comma-separated list
         
 
-        if(information.Countries)
+        if(information.Countries[0])
         {
-            var countriesLength = information.Countries.length;
+        var countriesLength = information.Countries.length;
 
-            information.Countries.forEach((countryElement, index) => {
-                var newElem = document.createElement('a');
-                newElem.className = "contenu_cliquable";
+        information.Countries.forEach((countryElement, index) => {
+            var newElem = document.createElement('a');
+            newElem.className = "contenu_cliquable";
                 newElem.setAttribute('Name',countryElement);
                 newElem.innerHTML = countryElement;
 
-                // Ajoutez une virgule si ce n'est pas le dernier élément
-                if (index < countriesLength - 1) {
+            // Ajoutez une virgule si ce n'est pas le dernier élément
+            if (index < countriesLength - 1) {
                     newElem.innerHTML += "<br>";
-                }
+            }
 
-                pays_html.appendChild(newElem);
-            }); 
+            pays_html.appendChild(newElem);
+        });
         }
+        else  
+           libelle_Countries.parentNode.parentNode.remove();
 
         if(information.Demonym)
-        gentile_html.innerHTML=information.Demonym;
+          gentile_html.innerHTML=information.Demonym;
+        else
+          Libelle_Gentile.parentNode.parentNode.remove();
         if(information.Government)
-        chefAdministratif_html.innerHTML=information.Government;
+          chefAdministratif_html.innerHTML=information.Government;
+        else
+          Libelle_ChefAdministratif.parentNode.parentNode.remove();
 
-        if(information.Languages)
+
+        if(information.Languages[0])
         {
 
             var languagesLength = information.Languages.length;
 
             information.Languages.forEach((languageElement, index) => {
                 var newElem = document.createElement('p');
-                newElem.className = "contenu";
                 newElem.innerHTML =languageElement;
 
                 // Ajoutez une virgule si ce n'est pas le dernier élément
@@ -231,14 +264,20 @@ function setPage(information) {
                 langues_html.appendChild(newElem);
             });
         }
+        else
+          libelle_Langues.parentNode.parentNode.remove();
 
         let flag_html = document.getElementById('Flag');
         let image_html = document.getElementById('Image');
 
-        if(information.Flags)
+        if(information.Flags[0])
             flag_html.setAttribute('src',information.Flags);
+        else
+            flag_html.remove();
         if(information.Image)
             image_html.setAttribute('src',information.Image);
+        else
+            image_html.remove();
 
 
 
@@ -271,8 +310,8 @@ function setPage(information) {
                 var name = event.currentTarget.name;
                 GoToPage(name,"Country");
             });
-        }         
-    
+        }
+        
 }
 
 function GoToPage(name,type){
@@ -280,7 +319,9 @@ function GoToPage(name,type){
     var url = `../${type}/${type.toLowerCase()}.html?name=${name}`;
     document.location.href = url;
 }
+        
 
+        
 async function findWikipediaPage(title) {
   try {
     const response = await fetch('https://fr.wikipedia.org/w/api.php?' +
@@ -300,11 +341,8 @@ async function findWikipediaPage(title) {
     if (searchResults.length > 0) {
       const firstResult = searchResults[0];
       const pageTitle = firstResult.title;
-      console.log('Titre de la page Wikipedia :', searchResults);
-      console.log(pageTitle)
       return pageTitle;
     } else {
-      console.log('Aucun résultat trouvé pour la recherche.');
       return null;
     }
   } catch (error) {
@@ -333,6 +371,7 @@ async function fetchWikipediaIntroduction(pageTitle, compteur) {
     const data = await response.json();
     const pages = data.query.pages;
     const pageId = Object.keys(pages)[0];
+   
     
     let estPresent = false;
     pages[pageId].categories.forEach(c => {
@@ -341,14 +380,11 @@ async function fetchWikipediaIntroduction(pageTitle, compteur) {
       }
     });
     if(estPresent){
-      console.log(data);
-      console.log("Page id : " + pageId)
       if (pageId !== '-1') {
         const introduction = pages[pageId].extract;
-        console.log('Introduction de la page Wikipedia :', introduction);
+       
         return introduction + "\n    <i>(informations provenant de wikipédia)</i>";
       } else {
-        console.log('Page non trouvée.');
         return null;
       }
     }else{
@@ -357,8 +393,9 @@ async function fetchWikipediaIntroduction(pageTitle, compteur) {
       }else{
         compteur++;
         return fetchWikipediaIntroduction(searchResults[compteur].title, compteur);            
-      }
-      
+}
+
+
     }
   } catch (error) {
     console.error('Erreur lors de la récupération de l\'introduction :', error.message);
@@ -396,9 +433,11 @@ function nettoyerNomIle(nom) {
 
 
 window.onload = async function () {
+
   
   rechercher();
   var islandDescription = document.getElementById("description-ile");
   let nomPage = await findWikipediaPage(getParameter("ile"));
   islandDescription.innerHTML = await fetchWikipediaIntroduction(nomPage,0)
+
 };
