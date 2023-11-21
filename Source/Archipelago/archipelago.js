@@ -25,6 +25,7 @@ function rechercher() {
       OPTIONAL {?Page wdt:P2046 ?Area.}
       OPTIONAL {?Page wdt:P206 ?SeaId.
                 ?SeaId rdfs:label ?Seas.
+                {?SeaId (wdt:P31/wdt:P279*) wd:Q165} UNION {?SeaId (wdt:P31/wdt:P279*) wd:Q9430}
                 FILTER(lang(?Seas) = 'fr')}
       OPTIONAL {?Page wdt:P17 ?CountriesId.
         ?CountriesId rdfs:label ?Countries.

@@ -27,6 +27,7 @@ SELECT DISTINCT ?Name ?Description ?Image ?Official ?Demonym ?Languages ?Motto ?
     OPTIONAL {?Page wdt:P625 ?Coordinates.}
     OPTIONAL {?Page wdt:P206 ?SeaId.
               ?SeaId rdfs:label ?Seas.
+              {?SeaId (wdt:P31/wdt:P279*) wd:Q165} UNION {?SeaId (wdt:P31/wdt:P279*) wd:Q9430}
               FILTER(lang(?Seas) = 'fr')}
     OPTIONAL{?Page wdt:P18 ?Image}
     OPTIONAL{?Page wdt:P1549 ?Demonym.

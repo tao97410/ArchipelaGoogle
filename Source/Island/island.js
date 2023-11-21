@@ -12,44 +12,45 @@ function rechercher() {
   document.getElementById("images").style.visibility="hidden";
   // Requête SPARQL à exécuter
   const sparqlQuery = `#defaultView:Table
-SELECT DISTINCT ?Page ?Name ?Desc ?Area ?Population ?Coordinates ?Archipelago ?Seas ?Countries ?Image ?Demonym ?Languages ?Flags ?Government
-  WHERE {
-    # Instances of island (or of subclasses of island)
-    ?Page (wdt:P31/wdt:P279*) wd:Q23442.
-    ?Page rdfs:label ?Name.    
-    FILTER(lang(?Name) = 'fr')
-    FILTER(STR(?Name) = \"` + getParameter("ile") + `\")
-    OPTIONAL{?Page schema:description ?Desc.
-    FILTER(lang(?Desc) = 'fr')}
-    # Get the area of the island
-    # Use the psn: prefix to normalize the values to a common unit of area
-    OPTIONAL {?Page wdt:P2046 ?Area.}
-    OPTIONAL {?Page wdt:P1082 ?Population.}
-    OPTIONAL {?Page wdt:P625 ?Coordinates.}
-    OPTIONAL {?Page wdt:P361 ?ArchipelagoId.
-              ?ArchipelagoId (wdt:P31/wdt:P279*) wd:Q1402592.
-              ?ArchipelagoId rdfs:label ?Archipelago.
-              FILTER(lang(?Archipelago) = 'fr')}
-    OPTIONAL {?Page wdt:P206 ?SeaId.
-              ?SeaId rdfs:label ?Seas.
-              FILTER(lang(?Seas) = 'fr')}
-    OPTIONAL {?Page wdt:P17 ?CountriesId.
-      ?CountriesId rdfs:label ?Countries.
-      FILTER(lang(?Countries) = 'fr')}
-    OPTIONAL{?Page wdt:P18 ?Image}
-    OPTIONAL{?Page wdt:P131 ?region.
-    OPTIONAL{?region wdt:P1549 ?Demonym.
-             FILTER(lang(?Demonym) = 'fr')}
-    OPTIONAL{?region wdt:P37 ?LanguagesId.
-             ?LanguagesId rdfs:label ?Languages.
-             FILTER(lang(?Languages)='fr')}
-    OPTIONAL{?region wdt:P41 ?Flags}
-    OPTIONAL{?region wdt:P6 ?GovernmentId.
-             ?GovernmentId rdfs:label ?Government
-             FILTER(lang(?Government)='fr')}}
-  }
-  ORDER BY ?Government ?Countries ?Seas
-  LIMIT 100`;
+  SELECT DISTINCT ?Page ?Name ?Desc ?Area ?Population ?Coordinates ?Archipelago ?Seas ?Countries ?Image ?Demonym ?Languages ?Flags ?Government
+    WHERE {
+      # Instances of island (or of subclasses of island)
+      ?Page (wdt:P31/wdt:P279*) wd:Q23442.
+      ?Page rdfs:label ?Name.    
+      FILTER(lang(?Name) = 'fr')
+      FILTER(STR(?Name) = \"` + getParameter("ile") + `\")
+      OPTIONAL{?Page schema:description ?Desc.
+      FILTER(lang(?Desc) = 'fr')}
+      # Get the area of the island
+      # Use the psn: prefix to normalize the values to a common unit of area
+      OPTIONAL {?Page wdt:P2046 ?Area.}
+      OPTIONAL {?Page wdt:P1082 ?Population.}
+      OPTIONAL {?Page wdt:P625 ?Coordinates.}
+      OPTIONAL {?Page wdt:P361 ?ArchipelagoId.
+                ?ArchipelagoId (wdt:P31/wdt:P279*) wd:Q1402592.
+                ?ArchipelagoId rdfs:label ?Archipelago.
+                FILTER(lang(?Archipelago) = 'fr')}
+      OPTIONAL {?Page wdt:P206 ?SeaId.
+                ?SeaId rdfs:label ?Seas.
+                {?SeaId (wdt:P31/wdt:P279*) wd:Q165} UNION {?SeaId (wdt:P31/wdt:P279*) wd:Q9430}
+                FILTER(lang(?Seas) = 'fr')}
+      OPTIONAL {?Page wdt:P17 ?CountriesId.
+        ?CountriesId rdfs:label ?Countries.
+        FILTER(lang(?Countries) = 'fr')}
+      OPTIONAL{?Page wdt:P18 ?Image}
+      OPTIONAL{?Page wdt:P131 ?region.
+      OPTIONAL{?region wdt:P1549 ?Demonym.
+               FILTER(lang(?Demonym) = 'fr')}
+      OPTIONAL{?region wdt:P37 ?LanguagesId.
+               ?LanguagesId rdfs:label ?Languages.
+               FILTER(lang(?Languages)='fr')}
+      OPTIONAL{?region wdt:P41 ?Flags}
+      OPTIONAL{?region wdt:P6 ?GovernmentId.
+               ?GovernmentId rdfs:label ?Government
+               FILTER(lang(?Government)='fr')}}
+    }
+    ORDER BY ?Government ?Countries ?Seas
+    LIMIT 100`;
 
   // URL de l'endpoint SPARQL de Wikidata
   const endpointUrl = 'https://query.wikidata.org/sparql';
@@ -66,7 +67,7 @@ SELECT DISTINCT ?Page ?Name ?Desc ?Area ?Population ?Coordinates ?Archipelago ?S
         let dataFinal = {};    
         document.getElementById("loading").style.display = "none";      
         document.getElementById("images").style.visibility="visible";
-        dataFinal.Name = data.results.bindings[0].Name.value;
+        dataFinal.Name = data.results.bindings[0].Name?.value;
         dataFinal.Desc = data.results.bindings[0].Desc?.value;
         dataFinal.Area = data.results.bindings[0]?.Area?.value;
         dataFinal.Population = data.results.bindings[0]?.Population?.value;
