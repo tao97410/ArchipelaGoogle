@@ -171,28 +171,32 @@ function setPage(information) {
 
           }
         }
-        //REMOVE
-        var libelleElements = document.getElementsByClassName("libelle");
-        var contenuElements = document.getElementsByClassName("contenu");
-    
-        // Function to check if an element's ID is in the resultDictionary
-        function isInDictionary(element) {
-          var id = element.id.substring(element.id.lastIndexOf("_") + 1);
-          return dictionnaireHTML.hasOwnProperty(id);
+      //REMOVE
+      // Get all elements with class "libelle" or "contenu"
+      var libelleElements = document.getElementsByClassName("libelle");
+      var contenuElements = document.getElementsByClassName("contenu");
+      var imageElements= document.getElementsByClassName("carteIle");
+
+      function isInDictionary(element) {
+        var id = element.id.substring(element.id.lastIndexOf("_") + 1);
+        return dictionnaireHTML.hasOwnProperty(id);
+      }
+
+      // Remove elements that are not in the resultDictionary
+      function removeUnusedElements(elements) {
+        for (var i = elements.length - 1; i >= 0; i--) {
+          if (elements[i].tagName!=='IMG' && !isInDictionary(elements[i]))
+            elements[i].parentNode.parentNode.remove();
+          else if(elements[i].tagName==='IMG' && !isInDictionary(elements[i]))
+            elements[i].remove();
         }
-    
-        // Remove elements that are not in the resultDictionary
-        function removeUnusedElements(elements) {
-          for (var i = elements.length - 1; i >= 0; i--) {
-            if (!isInDictionary(elements[i])) {
-              elements[i].parentNode.parentNode.remove();
-            }
-          }
-        }
-    
-        // Call the function for both "libelle" and "contenu" elements
-        removeUnusedElements(libelleElements);
-        removeUnusedElements(contenuElements);
+      }
+
+      // Call the function for both "libelle" and "contenu" elements
+      removeUnusedElements(libelleElements);
+      removeUnusedElements(contenuElements);
+      removeUnusedElements(imageElements);
+        
 
       var countries = dictionnaireHTML["Countries"][1].children;
 

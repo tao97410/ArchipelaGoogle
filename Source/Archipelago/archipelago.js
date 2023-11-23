@@ -79,12 +79,16 @@ function rechercher() {
   queryWikidata();
 }
 
+function isObject(propertyValue) {
+  return Object.prototype.toString.call(propertyValue) === '[object Object]';
+}
+
 function setPage(information) {
   var dictionnaireHTML = {};
 
   // Iterate through the keys in the JSON object
   for (var key in information) {
-    if (information.hasOwnProperty(key) && information[key][0]) {
+    if (information.hasOwnProperty(key) && !isObject(information[key]) && information[key][0]) {
       // Construct the element IDs based on the current key
       var libelleId = "Libelle_" + key;
       var contentId = "Content_" + key;
@@ -96,8 +100,20 @@ function setPage(information) {
       // Create an array with the elements and assign it to the key in the dictionary
       dictionnaireHTML[key] = [libelleElement, contentElement];
 
+    }else if (information.hasOwnProperty(key) && isObject(information[key])){
+         // Construct the element IDs based on the current key
+         var libelleId = "Libelle_" + key;
+         var contentId = "Content_" + key;
+     
+         // Get the elements using document.getElementById
+         var libelleElement = document.getElementById(libelleId);
+         var contentElement = document.getElementById(contentId);
+     
+         // Create an array with the elements and assign it to the key in the dictionary
+         dictionnaireHTML[key] = [libelleElement, contentElement];
     }
   }
+
   dictionnaireHTML["Official"]=["Libelle_Official","Content_Official"]
   var nomOfficiel=document.getElementById('Content_Official');
   nomOfficiel.innerHTML=information.Name;
@@ -124,8 +140,7 @@ function setPage(information) {
                     information[key].forEach((Element,index) => {
                         var newElem = document.createElement('a');
                         newElem.setAttribute('Name',Element);
-                        newElem.innerHTML = Element;
-                    
+                        newElem.innerHTML = Element; 
                         // Ajoutez une virgule si ce n'est pas le dernier élément
                         if (index < Length - 1) {
                             newElem.innerHTML += "<br>";
@@ -153,28 +168,30 @@ function setPage(information) {
       }
     }
     //REMOVE
-    var libelleElements = document.getElementsByClassName("libelle");
-    var contenuElements = document.getElementsByClassName("contenu");
-    var imageElements = document.getElementsByClassName("carteIle");
+   // Get all elements with class "libelle" or "contenu"
+   var libelleElements = document.getElementsByClassName("libelle");
+   var contenuElements = document.getElementsByClassName("contenu");
+   var imageElements= document.getElementsByClassName("carteIle");
 
-    // Function to check if an element's ID is in the resultDictionary
-    function isInDictionary(element) {
-      var id = element.id.substring(element.id.lastIndexOf("_") + 1);
-      return dictionnaireHTML.hasOwnProperty(id);
-    }
+   function isInDictionary(element) {
+     var id = element.id.substring(element.id.lastIndexOf("_") + 1);
+     return dictionnaireHTML.hasOwnProperty(id);
+   }
 
-    // Remove elements that are not in the resultDictionary
-    function removeUnusedElements(elements) {
-      for (var i = elements.length - 1; i >= 0; i--) {
-        if (!isInDictionary(elements[i]))
-          elements[i].parentNode.parentNode.remove();
-      }
-    }
+   // Remove elements that are not in the resultDictionary
+   function removeUnusedElements(elements) {
+     for (var i = elements.length - 1; i >= 0; i--) {
+       if (elements[i].tagName!=='IMG' && !isInDictionary(elements[i]))
+         elements[i].parentNode.parentNode.remove();
+       else if(elements[i].tagName==='IMG' && !isInDictionary(elements[i]))
+         elements[i].remove();
+     }
+   }
 
-    // Call the function for both "libelle" and "contenu" elements
-    removeUnusedElements(libelleElements);
-    removeUnusedElements(contenuElements);
-    removeUnusedElements(imageElements);
+   // Call the function for both "libelle" and "contenu" elements
+   removeUnusedElements(libelleElements);
+   removeUnusedElements(contenuElements);
+   removeUnusedElements(imageElements);
 
 
 

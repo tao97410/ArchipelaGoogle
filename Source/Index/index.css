@@ -56,23 +56,30 @@ body{
     font-weight: bold;
 }
 
+
 /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! HEADER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
 
 .header{
     position: fixed;
     width: 100%;
+    z-index: 2;
+    height: 7rem;
 }
+
+
 
 .header_motor {
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    height: 6rem;
     box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
     background-color: rgb(44, 43, 43) ;
   }
 
 .header_motor li:first-child {
-    margin-right: 1rem;
+    margin-right: 0.5rem;
     margin-left: 2rem;
 }
 
@@ -82,12 +89,47 @@ body{
 
 }
 
+.header_motor li:first-child img:hover{
+    transform: scale(1.10);
+    transition: transform 400ms ease;
+}
+
+.homeMenu a{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+
 #Archipel{
     font-weight: bold;
     font-size:3em;
     text-shadow: 2px 2px 4px black;
     color: white;
 }
+
+#Archipel:hover{
+    text-decoration:underline ;
+
+}
+
+
+
+header .homeMenu:hover img{
+    transform: scale(1.05);
+    transition:transform 400ms ease;
+
+}
+
+header ul.archipel:hover img{
+    transform: scale(1.10);
+    transition: transform 400ms ease;
+
+}
+
+
+
+
   
 .header_motor li:last-child {
     margin-left: auto;
@@ -98,11 +140,24 @@ body{
     font-size: 1.5em;
 }
 
-li{
-    list-style: none;
-}
+@media (max-width: 850px) {
+    header ul li p{
+      display: none;
+    }
 
-/* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! MAIN !!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
+    .header_motor li:first-child {
+        margin-right: 2rem;
+        margin-left: 2rem;
+    }
+
+    header ul li a{
+        display:flex;
+        width: 25rem;
+        justify-content: space-between;
+    }
+  }
+
+/* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!main!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
 
 main {
     padding-top: 5vh;
